@@ -68,7 +68,21 @@ function readFlights(){
     $res = $result->fetchAll();
     foreach ($res as $data){
         $nbr_Flight++;
+
     }
+    $origincity="";
+    $destinationcity="";
+
+    $query = "SELECT origincity, destinationcity FROM flights WHERE route ='".$route."'";
+    $origin = $db->query($query);
+    foreach ($origin as $data) {
+        $origincity=$data['origincity'];
+        $destinationcity=$data['destinationcity'];
+    }
+    print_r($origincity);
+    print_r($destinationcity);
+
+
 
     if($nbr_Flight>=1) {
 //        echo'<table class="table">
@@ -95,7 +109,7 @@ function readFlights(){
             echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
             echo '<div class="card-body">';
             echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-            echo '<p class="card-text">' . $result[$k]['route'] . '</p>';
+            echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'</p>';
             echo '<h5 class="card-text">Price €</h5>';
             echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';

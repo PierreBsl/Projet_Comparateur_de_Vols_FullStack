@@ -28,6 +28,10 @@ echo '<!DOCTYPE html>
 
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
+    <div class="container col-md-9">
+        <h1 id="mainIntro" class="display-4 text-center">Vols Sélectionnés</h1>
+        <br><br>
+        <div class="row">
     <div class="container col-md-8">';
 
 readFlights();
