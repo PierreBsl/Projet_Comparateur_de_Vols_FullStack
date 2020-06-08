@@ -55,8 +55,7 @@ function readFlights(){
 
     $nbPlace=$nbrAdults+$nbrEnfants;
     $route = " ".$depart."-".$arrivee;
-    $route=" YOW-ZAC";
-    echo $route;
+//    $route=" YEG-YQB";
     $unixTimestamp = strtotime($date);
     $dayOfWeek = date("w", $unixTimestamp); //dayoftime
 
@@ -79,10 +78,6 @@ function readFlights(){
         $origincity=$data['origincity'];
         $destinationcity=$data['destinationcity'];
     }
-    print_r($origincity);
-    print_r($destinationcity);
-
-
 
     if($nbr_Flight>=1) {
 //        echo'<table class="table">
@@ -110,10 +105,11 @@ function readFlights(){
             echo '<div class="card-body">';
             echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
             echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'</p>';
+            echo '<hr>';
             echo '<h5 class="card-text">Price €</h5>';
             echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';
-            echo '</div>';
+            echo '</div><br>';
 
 //            echo '<tr>';
 //            echo '<th id="idStudent" scope="row">'.$index.'</th>';
@@ -132,7 +128,6 @@ function readFlights(){
     }
 
     echo "Nombre Flight: ".$nbr_Flight;
-
 
 
 }
