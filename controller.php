@@ -1,16 +1,23 @@
 <?php
 
 require_once 'connexpdo.php';
-
+session_start();
 if (isset($_GET["func"]))
 {
     if ($_GET["func"]=="readFlights"){
-        readFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
+        redirectFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
     }
 }
 
 function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
+    header("Location: affichageVol.php");
+
     $_SESSION['originAirport']=$depart;
+    $_SESSION['destinationAirport']=$arrivee;
+    $_SESSION['departDate']=$date;
+    $_SESSION['nbrAdultes']=$nbrAdults;
+    $_SESSION['nbrEnfants']=$nbrEnfants;
+    $_SESSION['volDirectCheck']=$volDirect;
 
 }
 
@@ -37,53 +44,73 @@ function buildForm() {
     }
 }
 
-function readFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
+function readFlights(){
     global  $db;
-    $nbr_student=0;
+    $depart = $_SESSION['originAirport'];
+    $arrivee = $_SESSION['destinationAirport'];
+    $date = $_SESSION['departDate'];
+    $nbrAdults = $_SESSION['nbrAdultes'];
+    $nbrEnfants = $_SESSION['nbrEnfants'];
+    $volDirect = $_SESSION['volDirectCheck'];
 
-    $query0 = "SELECT id FROM flights WHERE originairport =".$depart." AND destinationairport=".$arrivee;
-    $nbr = $db->query($query0);
-    foreach ($nbr as $data) {
-        $nbr_student++;
+    $nbPlace=$nbrAdults+$nbrEnfants;
+    $route = " ".$depart."-".$arrivee;
+    $route=" YOW-ZAC";
+    echo $route;
+    $unixTimestamp = strtotime($date);
+    $dayOfWeek = date("w", $unixTimestamp); //dayoftime
+
+    $nbr_Flight=0;
+
+    $query = "SELECT id FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
+    $result = $db->prepare($query);
+    $result->execute();
+    $res = $result->fetchAll();
+    foreach ($res as $data){
+        $nbr_Flight++;
     }
-    echo "flights"+$date;
 
-//
-//    if($nbr_student>=1) {
-//        echo'<table class="table">
-//        <thead>
-//            <tr>
-//                <th scope="col">#</th>
-//                <th scope="col">Nom</th>
-//                <th scope="col">Prénom</th>
-//                <th scope="col">Note</th>
-//                <th scope="col"></th>
-//                <th scope="col"></th>
-//            </tr>
-//        </thead>
-//        <tbody>';
-//
-//        $query1 = "SELECT id, nom, prenom, note FROM students WHERE user_id =".$_SESSION["adminId"];
-//        $sth = $db->prepare($query1);
-//        $sth->execute();
-//        $result=$sth->fetchAll();
-//
-//        for ($k = 0; $k < $nbr_student; $k++) {
-//            $index=$k+1;
-//            echo '<tr>';
-//            echo '<th id="idStudent" scope="row">'.$index.'</th>';
-//            echo '<td>' . $result[$k]['nom'] . '</td>';
-//            echo '<td>' . $result[$k]['prenom'] . '</td>';
-//            echo '<td>' . $result[$k]['note'] . '</td>';
-//            echo '<td><form method="POST" action="vieweditstudent.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-primary">Update</button></form></td>';
-//            echo '<td><form method="POST" action="controller.php?func=DeleteStudent"><button style="float: right" name="Delete" value="'.$result[$k]['id'].'" type="submit" class="btn btn-danger">Delete</button></form></td>';
-//            echo '</tr>';
-//        }
-//        echo '</tbody>';
-//        echo '</table>';
-//    }else{
-//        return;
-//    }
+    if($nbr_Flight>=1) {
+        echo'<table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Route</th>
+                <th scope="col">Distance</th>
+                <th scope="col">Depart Time</th>
+                <th scope="col">Arrival time</th>
+                <th scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody>';
+        $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
+        $sth = $db->prepare($query1);
+        $sth->execute();
+        $result=$sth->fetchAll();
+
+        for ($k = 0; $k < $nbr_Flight; $k++) {
+            $index=$k+1;
+            echo '<tr>';
+            echo '<th id="idStudent" scope="row">'.$index.'</th>';
+            echo '<td>' . $result[$k]['id'] . '</td>';
+            echo '<td>' . $result[$k]['route'] . '</td>';
+            echo '<td>' . $result[$k]['distancekm'] . '</td>';
+            echo '<td>' . $result[$k]['departuretime'] . '</td>';
+            echo '<td>' . $result[$k]['arrivaltime'] . '</td>';
+            echo '<td><input type="checkbox"></td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }else{
+        return;
+    }
+
+    echo "Nombre Flight: ".$nbr_Flight;
+
+
+
 }
 
 function CreateFormAdult($id){
