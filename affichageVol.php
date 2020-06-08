@@ -32,6 +32,11 @@ echo '<!DOCTYPE html>
 
 readFlights();
 echo '</div>
+<div style="border-left:1px solid darkgrey;height:352px"></div>
+    <div class="col">
+        <div class="card" style="height: 353px">
+        </div>
+    </div>
 </main>
 </body>
 </html>';

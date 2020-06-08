@@ -71,19 +71,19 @@ function readFlights(){
     }
 
     if($nbr_Flight>=1) {
-        echo'<table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">ID</th>
-                <th scope="col">Route</th>
-                <th scope="col">Distance</th>
-                <th scope="col">Depart Time</th>
-                <th scope="col">Arrival time</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>';
+//        echo'<table class="table">
+//        <thead>
+//            <tr>
+//                <th scope="col">#</th>
+//                <th scope="col">ID</th>
+//                <th scope="col">Route</th>
+//                <th scope="col">Distance</th>
+//                <th scope="col">Depart Time</th>
+//                <th scope="col">Arrival time</th>
+//                <th scope="col"></th>
+//            </tr>
+//        </thead>
+//        <tbody>';
         $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
         $sth = $db->prepare($query1);
         $sth->execute();
@@ -92,26 +92,27 @@ function readFlights(){
         for ($k = 0; $k < $nbr_Flight; $k++) {
             $index=$k+1;
             echo '<div class="card">';
-            echo '<h5 class="card-header"> Vol ' . $result[$k]['id'] . '</h5>';
+            echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
             echo '<div class="card-body">';
-            echo '<h5 class="card-title">' . $result[$k]['route'] . '</h5>';
-            echo '<h5 class="card-title">' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-            echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form>';
+            echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
+            echo '<p class="card-text">' . $result[$k]['route'] . '</p>';
+            echo '<h5 class="card-text">Price €</h5>';
+            echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';
             echo '</div>';
 
-            echo '<tr>';
-            echo '<th id="idStudent" scope="row">'.$index.'</th>';
-            echo '<td>' . $result[$k]['id'] . '</td>';
-            echo '<td>' . $result[$k]['route'] . '</td>';
-            echo '<td>' . $result[$k]['distancekm'] . '</td>';
-            echo '<td>' . $result[$k]['departuretime'] . '</td>';
-            echo '<td>' . $result[$k]['arrivaltime'] . '</td>';
-            echo '<td><form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form></td>';
-            echo '</tr>';
+//            echo '<tr>';
+//            echo '<th id="idStudent" scope="row">'.$index.'</th>';
+//            echo '<td>' . $result[$k]['id'] . '</td>';
+//            echo '<td>' . $result[$k]['route'] . '</td>';
+//            echo '<td>' . $result[$k]['distancekm'] . '</td>';
+//            echo '<td>' . $result[$k]['departuretime'] . '</td>';
+//            echo '<td>' . $result[$k]['arrivaltime'] . '</td>';
+//            echo '<td><form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form></td>';
+//            echo '</tr>';
         }
-        echo '</tbody>';
-        echo '</table>';
+//        echo '</tbody>';
+//        echo '</table>';
     }else{
         return;
     }
