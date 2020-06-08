@@ -58,6 +58,7 @@ function readFlights(){
 //    $route=" YEG-YQB";
     $unixTimestamp = strtotime($date);
     $dayOfWeek = date("w", $unixTimestamp); //dayoftime
+    $daypropre = date("d/m/Y", $unixTimestamp);
 
     $nbr_Flight=0;
 
@@ -104,7 +105,7 @@ function readFlights(){
             echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
             echo '<div class="card-body">';
             echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-            echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'</p>';
+            echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
             echo '<hr>';
             echo '<h5 class="card-text">Price €</h5>';
             echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
