@@ -80,7 +80,7 @@ function readFlights(){
                 <th scope="col">Distance</th>
                 <th scope="col">Depart Time</th>
                 <th scope="col">Arrival time</th>
-                <th scope="col">Select</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>';
@@ -91,6 +91,15 @@ function readFlights(){
 
         for ($k = 0; $k < $nbr_Flight; $k++) {
             $index=$k+1;
+            echo '<div class="card">';
+            echo '<h5 class="card-header"> Vol ' . $result[$k]['id'] . '</h5>';
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">' . $result[$k]['route'] . '</h5>';
+            echo '<h5 class="card-title">' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
+            echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form>';
+            echo '</div>';
+            echo '</div>';
+
             echo '<tr>';
             echo '<th id="idStudent" scope="row">'.$index.'</th>';
             echo '<td>' . $result[$k]['id'] . '</td>';
@@ -98,7 +107,7 @@ function readFlights(){
             echo '<td>' . $result[$k]['distancekm'] . '</td>';
             echo '<td>' . $result[$k]['departuretime'] . '</td>';
             echo '<td>' . $result[$k]['arrivaltime'] . '</td>';
-            echo '<td><input type="checkbox"></td>';
+            echo '<td><form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form></td>';
             echo '</tr>';
         }
         echo '</tbody>';

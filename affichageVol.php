@@ -28,7 +28,7 @@ echo '<!DOCTYPE html>
 
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
-    <div class="container col-md-9">';
+    <div class="container col-md-8">';
 
 readFlights();
 echo '</div>
