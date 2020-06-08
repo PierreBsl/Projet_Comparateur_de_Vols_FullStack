@@ -1,0 +1,38 @@
+main > .container {
+    padding: 60px 15px 0;
+}
+.btn-white, .btn-white:hover, .btn-white:active, .btn-white:visited
+{
+    color: white;
+    background-color: orangered;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+#mainTitle
+{
+    color: orangered;
+}
+#mainIntro
+{
+    padding-top: 80px;
+}
+#volDirectCheck
+{
+    padding-left: 20px;
+}
+input[type="date"]:before {
+    content: attr(placeholder) !important;
+    color: #aaa;
+    margin-right: 0.5em;
+}
+input[type="date"]:focus:before,
+input[type="date"]:valid:before {
+    content: "";
+}
