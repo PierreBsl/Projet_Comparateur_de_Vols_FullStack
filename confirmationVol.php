@@ -29,8 +29,7 @@ echo '<!DOCTYPE html>
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-if ($_SESSION['commande']==1){
-    echo $_SESSION['commande'];
+if ($_SESSION['active']==1){
     for ($i = 0; $i < $nbrAdults; $i++) {
         displayCardByAdult($_SESSION['commande']);
     }

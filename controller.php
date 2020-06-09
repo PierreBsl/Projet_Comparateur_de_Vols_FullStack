@@ -16,32 +16,44 @@ if (isset($_GET["func"]))
 
         for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
             $k =$i+1;
-            createUser($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], true, $_SESSION['price']);
+            createAdult($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], true, $_SESSION['price']);
         }
         for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
             $k =$i+1;
             $childrenPrice = $_SESSION['price']/2;
-            createUser($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], "null", $_POST['birthEnfant'.$k], false, $childrenPrice);
+            createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], false, $childrenPrice);
         }
+        header( "Location:confirmationVol.php");
     }
 }
 
-function createUser($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
+function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
+
     global  $db;
 
     $numeroCommande = rand(1000,999999);
-
-    $q = "SELECT MAX(id) FROM users ";
-    $r = $db->query($q);
-    print_r($r);
 
     $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$numeroCommande, $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
 
-    $_SESSION['commande'] = 1;
+    $_SESSION['active'] = 1;
+    $_SESSION['commande'] = $numeroCommande;
 
-    header( "Location:confirmationVol.php");
+}
+function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
+
+    global  $db;
+
+    $numeroCommande = rand(1000,999999);
+
+    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sqlR1 = $db->prepare($sql1);
+    $sqlR1->execute([$numeroCommande, $nom, $prenom, "null", $birthDate, $isAdult, $depense]);
+
+    $_SESSION['active'] = 1;
+    $_SESSION['commande'] = $numeroCommande;
+
 }
 
 function ConnectUser($mail, $birth) {
@@ -354,7 +366,7 @@ function isWeekEnd(){
 function displayCardByAdult($numeroCommande){
     global  $db;
 
-    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = '.$numeroCommande.' AND isAdult = true';
+    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = '.$numeroCommande;
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
