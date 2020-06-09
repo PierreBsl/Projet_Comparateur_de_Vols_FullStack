@@ -29,7 +29,8 @@ echo '<!DOCTYPE html>
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-if ($_SESSION['commande']){
+if ($_SESSION['commande']==1){
+    echo $_SESSION['commande'];
     for ($i = 0; $i < $nbrAdults; $i++) {
         displayCardByAdult($_SESSION['commande']);
     }
@@ -37,7 +38,7 @@ if ($_SESSION['commande']){
         displayCardByChildren($_SESSION['commande']);
     }
     echo '</div>
-<div style="border-left:1px solid darkgrey;height:352px"></div>
+<div style="border-left:1px solid darkgrey;height:288px"></div>
     <div class="col">';
 
     displayCommande();
@@ -55,7 +56,7 @@ if ($_SESSION['commande']){
     echo '<button name="validation" type ="submit" onclick="" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
     echo '</form>';
     echo '</div>
-<div style="border-left:1px solid darkgrey;height:352px"></div>
+<div style="border-left:1px solid darkgrey;height:208px"></div>
     <div class="col">';
     displayFlight();
     echo '</div>';
@@ -69,7 +70,6 @@ echo '</main>
         <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
-<script src="JS/test.js"></script>
 </html>';
 
 ?>

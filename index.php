@@ -1,6 +1,9 @@
 <?php
 include 'controller.php';
 require_once 'connexpdo.php';
+
+$_SESSION['commande']=0;
+
 echo '<!doctype html>
 <html lang="fr" class="h-100">
 <head>

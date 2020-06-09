@@ -1,7 +1,9 @@
 <?php
 
 require_once 'connexpdo.php';
+
 session_start();
+
 if (isset($_GET["func"]))
 {
     if ($_GET["func"]=="readFlights"){
@@ -11,37 +13,35 @@ if (isset($_GET["func"]))
         selectedFlight($_GET['id'], $_GET['price'], $_GET['capacity'], $_GET['travelTime']);
     }
     if ($_GET["func"]=="createUser"){
+
         for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
             $k =$i+1;
             createUser($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], true, $_SESSION['price']);
         }
         for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
             $k =$i+1;
-            createUser($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], "", $_POST['birthAdult'.$k], false, $_SESSION['price']);
+            $childrenPrice = $_SESSION['price']/2;
+            createUser($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], "null", $_POST['birthEnfant'.$k], false, $childrenPrice);
         }
     }
-    if ($_GET["func"]=="displayFlight"){
-        displayFlight();
-    }
 }
+
 function createUser($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
     global  $db;
 
-    $numeroCommande = 1;
+    $numeroCommande = rand(1000,999999);
 
     $q = "SELECT MAX(id) FROM users ";
     $r = $db->query($q);
-    foreach ($r as $data) {
-        $numeroCommande=$data['id']+1;
-    }
+    print_r($r);
 
     $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$numeroCommande, $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
 
-    $_SESSION['commande'] = $numeroCommande;
-    header( "Location:confirmationVol.php");
+    $_SESSION['commande'] = 1;
 
+    header( "Location:confirmationVol.php");
 }
 
 function ConnectUser($mail, $birth) {
@@ -166,7 +166,6 @@ function readFlights(){
 
     $nbPlace=$nbrAdults+$nbrEnfants;
     $route = " ".$depart."-".$arrivee;
-//    $route=" YEG-YQB";
     $unixTimestamp = strtotime($date);
     $dayOfWeek = date("w", $unixTimestamp); //dayoftime
     $_SESSION['dayOfWeek'] = $dayOfWeek;
@@ -355,14 +354,16 @@ function isWeekEnd(){
 function displayCardByAdult($numeroCommande){
     global  $db;
 
-    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = "'.$numeroCommande.'"';
+    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = '.$numeroCommande.' AND isAdult = true';
     $sth = $db->prepare($q);
     $sth->execute();
-    $r = $sth->fetchAll();
+    $result = $sth->fetchAll();
     $nAdultes=0;
 
     for ($k = 0; $k < $_SESSION['nbrAdultes']; $k++) {
         $nAdultes = $nAdultes +1;
+        $unixTimestamp = strtotime($result[$k]['birth']);
+        $naissance = date("d F Y", $unixTimestamp);
         echo '
  <div class="row">
     <div class="col col-mx-auto">
@@ -372,7 +373,7 @@ function displayCardByAdult($numeroCommande){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
-                        '.$r[$k]['nom'].'&nbsp;'.$r[$k]['prenom'].' 
+                        '.$result[$k]['nom'].'&nbsp;'.$result[$k]['prenom'].'
                     </div>
                     <div class="form-group col-md-6">
                     </div>
@@ -380,11 +381,11 @@ function displayCardByAdult($numeroCommande){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        '.$r[$k]['mail'].'
+                        '.$result[$k]['mail'].'
                     </div>
                     <div class="form-group col-md-6">
                     <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                        '.$r[$k]['birth'].'        
+                        '.$naissance.'        
                     </div>
                 </div>
             </div>
@@ -397,27 +398,30 @@ function displayCardByAdult($numeroCommande){
  <br>';
     }
 }
+
 function displayCardByChildren($numeroCommande){
     global  $db;
 
-    $q = 'SELECT nom, prenom, birth FROM users WHERE id = "'.$numeroCommande.'"';
+    $q = 'SELECT nom, prenom, birth FROM users WHERE id = '.$numeroCommande.' AND isAdult = false';
     $sth = $db->prepare($q);
     $sth->execute();
-    $r = $sth->fetchAll();
+    $result = $sth->fetchAll();
     $nEnfants=0;
 
     for ($k = 0; $k < $_SESSION['nbrEnfants']; $k++) {
         $nEnfants = $nEnfants +1;
+        $unixTimestamp = strtotime($result[$k]['birth']);
+        $naissance = date("d F Y", $unixTimestamp);
         echo '
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
-            <div class="card-header">Adulte n°'.$nEnfants.'</div>
+            <div class="card-header">Enfant n°'.$nEnfants.'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
-                        '.$r[$k]['nom'].'&nbsp;'.$r[$k]['prenom'].' 
+                        '.$result[$k]['nom'].'&nbsp&nbsp;'.$result[$k]['prenom'].' 
                     </div>
                     <div class="form-group col-md-6">
                     </div>
@@ -425,10 +429,10 @@ function displayCardByChildren($numeroCommande){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                        '.$r[$k]['birth'].'  
+                        '.$naissance.'  
                     </div>
                     <div class="form-group col-md-6">
-      
+     
                     </div>
                 </div>
             </div>
