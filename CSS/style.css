@@ -6,6 +6,10 @@ main > .container {
     color: white;
     background-color: orangered;
 }
+#progress-bar
+{
+    color: orangered;
+}
 
 .footer > .container {
     padding-right: 15px;

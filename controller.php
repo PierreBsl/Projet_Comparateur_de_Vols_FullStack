@@ -37,9 +37,15 @@ function displayFlight(){
     echo '<h5 class="card-header"> Vol #' . $_SESSION['selectedVolId'] . '</h5>';
     echo '<div class="card-body">';
     echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
+    echo '<div class="row" >';
+    echo '<div class="col">';
     echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '</div>';
+    echo '<div class="col">';
+    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '</div></div>';
     echo '<hr>';
-    echo '<h5 class="card-text">Price €</h5>';
+    echo '<h5 class="card-text">Price 150€</h5>';
     echo '</div>';
     echo '</div><br>';
 
@@ -71,6 +77,7 @@ function readFlights(){
 //    $route=" YEG-YQB";
     $unixTimestamp = strtotime($date);
     $dayOfWeek = date("w", $unixTimestamp); //dayoftime
+    $_SESSION['dayOfWeek'] = $dayOfWeek;
     $daypropre = date("d/m/Y", $unixTimestamp);
 
     $nbr_Flight=0;
@@ -96,23 +103,14 @@ function readFlights(){
     }
 
     if($nbr_Flight>=1) {
-//        echo'<table class="table">
-//        <thead>
-//            <tr>
-//                <th scope="col">#</th>
-//                <th scope="col">ID</th>
-//                <th scope="col">Route</th>
-//                <th scope="col">Distance</th>
-//                <th scope="col">Depart Time</th>
-//                <th scope="col">Arrival time</th>
-//                <th scope="col"></th>
-//            </tr>
-//        </thead>
-//        <tbody>';
         $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
         $sth = $db->prepare($query1);
         $sth->execute();
         $result=$sth->fetchAll();
+        $query2 = "SELECT fillingrate, farecode, weflights, departuretime, arrivaltime FROM companyprices WHERE route ='".$route."' ";
+        $sth1 = $db->prepare($query2);
+        $sth1->execute();
+        $result1=$sth->fetchAll();
 
         for ($k = 0; $k < $nbr_Flight; $k++) {
             $index=$k+1;
@@ -120,31 +118,30 @@ function readFlights(){
             echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
             echo '<div class="card-body">';
             echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-            echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+            echo '<div class="row" >';
+            echo '<div class="col">';
+            echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' .
+                $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
+            echo '</div>';
+            echo '<div class="col">';
+            echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i> 1h20';
+            echo '</div>';
+            echo '<div class="col">';
+            echo '<p class="card-text">Places Restantes <br> <div class="progress">';
+            echo '<div id="progress-bar" class="progress-bar bg-white" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
             echo '<hr>';
-            echo '<h5 class="card-text">Price €</h5>'; //Gérer le prix du Billet
+            echo '<h5 class="card-text">Price 150€</h5>';
             echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';
             echo '</div><br>';
-
-//            echo '<tr>';
-//            echo '<th id="idStudent" scope="row">'.$index.'</th>';
-//            echo '<td>' . $result[$k]['id'] . '</td>';
-//            echo '<td>' . $result[$k]['route'] . '</td>';
-//            echo '<td>' . $result[$k]['distancekm'] . '</td>';
-//            echo '<td>' . $result[$k]['departuretime'] . '</td>';
-//            echo '<td>' . $result[$k]['arrivaltime'] . '</td>';
-//            echo '<td><form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right" type="submit" class="btn btn-white">Select</button></form></td>';
-//            echo '</tr>';
         }
-//        echo '</tbody>';
-//        echo '</table>';
     }else{
         return;
     }
-
     echo "Nombre Flight: ".$nbr_Flight;
-
 
 }
 
@@ -154,7 +151,7 @@ function CreateFormAdult($id){
     $todayMonth = $today['mon'];
     $todayDay = $today['mday'];
     $lastYear = $todayYear-4;
-    echo ' 
+    echo '
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
@@ -194,7 +191,7 @@ function CreateFormEnfant($id){
     $todayMonth = $today['mon'];
     $todayDay = $today['mday'];
     $lastYear = $todayYear-4;
-    echo ' 
+    echo '
 <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
@@ -221,4 +218,11 @@ function CreateFormEnfant($id){
  <br>
  ';
 
+}
+
+function isWeekEnd(){
+    if($_SESSION['dayOfWeek'] == 0 || $_SESSION['dayOfWeek'] == 6) {
+        return true;
+    }
+    else return false;
 }
