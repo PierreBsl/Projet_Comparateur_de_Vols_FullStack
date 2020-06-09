@@ -31,10 +31,10 @@ echo '<!DOCTYPE html>
     <div class="col col-md-7">';
 if ($_SESSION['active']==1){
     for ($i = 0; $i < $nbrAdults; $i++) {
-        displayCardByAdult($_SESSION['commande']);
+        displayCardByAdult();
     }
     for ($i = 0; $i < $nbrEnfants; $i++) {
-        displayCardByChildren($_SESSION['commande']);
+        displayCardByChildren();
     }
     echo '</div>
 <div style="border-left:1px solid darkgrey;height:288px"></div>

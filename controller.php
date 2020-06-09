@@ -13,16 +13,19 @@ if (isset($_GET["func"]))
         selectedFlight($_GET['id'], $_GET['price'], $_GET['capacity'], $_GET['travelTime']);
     }
     if ($_GET["func"]=="createUser"){
+        $numeroCommande = rand(1000,999999);
+        $_SESSION['commande'] = $numeroCommande;
 
         for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
             $k =$i+1;
-            createAdult($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], true, $_SESSION['price']);
+            createAdult($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], 1, $_SESSION['price']);
         }
         for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
             $k =$i+1;
             $childrenPrice = $_SESSION['price']/2;
-            createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], false, $childrenPrice);
+            createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], 0, $childrenPrice);
         }
+        $_SESSION['active'] = 1;
         header( "Location:confirmationVol.php");
     }
 }
@@ -31,28 +34,18 @@ function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $numeroCommande = rand(1000,999999);
-
     $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$numeroCommande, $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
-
-    $_SESSION['active'] = 1;
-    $_SESSION['commande'] = $numeroCommande;
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
 
 }
 function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $numeroCommande = rand(1000,999999);
-
     $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$numeroCommande, $nom, $prenom, "null", $birthDate, $isAdult, $depense]);
-
-    $_SESSION['active'] = 1;
-    $_SESSION['commande'] = $numeroCommande;
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense]);
 
 }
 
@@ -363,10 +356,10 @@ function isWeekEnd(){
     else return 0;
 }
 
-function displayCardByAdult($numeroCommande){
+function displayCardByAdult(){
     global  $db;
 
-    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = '.$numeroCommande;
+    $q = "SELECT nom, prenom, mail, birth FROM users WHERE id = ".$_SESSION['commande']." AND adult = 1";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -411,10 +404,10 @@ function displayCardByAdult($numeroCommande){
     }
 }
 
-function displayCardByChildren($numeroCommande){
+function displayCardByChildren(){
     global  $db;
 
-    $q = 'SELECT nom, prenom, birth FROM users WHERE id = '.$numeroCommande.' AND isAdult = false';
+    $q = "SELECT nom, prenom, birth FROM users WHERE id = ".$_SESSION['commande']." AND adult = 0";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
