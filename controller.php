@@ -134,7 +134,7 @@ function readFlights(){
             echo '</div>';
             echo '<hr>';
             echo '<h5 class="card-text">À partir de 150€</h5>';
-            echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
+            echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
             echo '</div>';
             echo '</div><br>';
         }

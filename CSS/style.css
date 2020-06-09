@@ -6,6 +6,11 @@ main > .container {
     color: white;
     background-color: orangered;
 }
+.btn-outline-white, .btn-outline-white:hover, .btn-outline-white:active, .btn-outline-white:visited
+{
+    color: orangered;
+    border-color: orangered;
+}
 #progress-bar
 {
     color: orangered;
