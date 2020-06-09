@@ -111,7 +111,6 @@ function readFlights(){
     $result1=$sth->fetchAll();
 
     for ($k = 0; $k < $nbr_Flight; $k++) {
-        $index=$k+1;
         echo '<div class="card">';
         echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
         echo '<div class="card-body">';
@@ -125,7 +124,7 @@ function readFlights(){
         echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.travelTime($result[$k]['id']);
         echo '</div>';
         echo '<div class="col">';
-        echo '<p class="card-text">Places Restantes <br> <div class="progress">';
+        echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
         echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.flightCapacity($result[$k]['id']).'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
         echo '</div>';
         echo '</div>';
@@ -211,7 +210,6 @@ function CreateFormEnfant($id){
  </div>
  <br>
  ';
-
 }
 function dateDiff(){
     $today = date_create(getdate());
