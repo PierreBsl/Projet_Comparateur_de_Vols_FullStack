@@ -88,7 +88,6 @@ function readFlights(){
     $res = $result->fetchAll();
     foreach ($res as $data){
         $nbr_Flight++;
-
     }
     $origincity="";
     $destinationcity="";
@@ -102,44 +101,40 @@ function readFlights(){
         $_SESSION['destinationcity'] = $destinationcity;
     }
 
-    if($nbr_Flight>=1) {
-        $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
-        $sth = $db->prepare($query1);
-        $sth->execute();
-        $result=$sth->fetchAll();
-        $query2 = "SELECT fillingrate, farecode, weflights, departuretime, arrivaltime FROM companyprices WHERE route ='".$route."' ";
-        $sth1 = $db->prepare($query2);
-        $sth1->execute();
-        $result1=$sth->fetchAll();
+    $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
+    $sth = $db->prepare($query1);
+    $sth->execute();
+    $result=$sth->fetchAll();
+    $query2 = "SELECT fillingrate, farecode, weflights, departuretime, arrivaltime FROM companyprices WHERE route ='".$route."' ";
+    $sth1 = $db->prepare($query2);
+    $sth1->execute();
+    $result1=$sth->fetchAll();
 
-        for ($k = 0; $k < $nbr_Flight; $k++) {
-            $index=$k+1;
-            echo '<div class="card">';
-            echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
-            echo '<div class="card-body">';
-            echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-            echo '<div class="row" >';
-            echo '<div class="col">';
-            echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' .
-                $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
-            echo '</div>';
-            echo '<div class="col">';
-            echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.travelTime($result[$k]['id']);
-            echo '</div>';
-            echo '<div class="col">';
-            echo '<p class="card-text">Places Restantes <br> <div class="progress">';
-            echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.flightCapacity($result[$k]['id']).'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '<hr>';
-            echo '<h5 class="card-text">À partir de 150€</h5>';
-            echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
-            echo '</div>';
-            echo '</div><br>';
-        }
-    }else{
-        return;
+    for ($k = 0; $k < $nbr_Flight; $k++) {
+        $index=$k+1;
+        echo '<div class="card">';
+        echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
+        echo '<div class="card-body">';
+        echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
+        echo '<div class="row" >';
+        echo '<div class="col">';
+        echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' .
+            $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
+        echo '</div>';
+        echo '<div class="col">';
+        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.travelTime($result[$k]['id']);
+        echo '</div>';
+        echo '<div class="col">';
+        echo '<p class="card-text">Places Restantes <br> <div class="progress">';
+        echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.flightCapacity($result[$k]['id']).'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '<hr>';
+        echo '<h5 class="card-text">À partir de 150€</h5>';
+        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
+        echo '</div>';
+        echo '</div><br>';
     }
     echo "Nombre Flight: ".$nbr_Flight;
 }
