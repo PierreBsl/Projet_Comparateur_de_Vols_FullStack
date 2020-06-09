@@ -52,7 +52,6 @@ echo '<!doctype html>
                             <div class="form-group">
                                 Date de départ';
                                 $today = date("Y-m-d");
-                                echo $today;
                                 echo '<input type="date" class="form-control" min="'.$today.'" name="departDate" placeholder="Départ le" required>
                             </div>
                             <div class="form-row">
