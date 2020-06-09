@@ -227,11 +227,14 @@ function dateDiff(){
 
 function travelTime($id){
     global $db;
-    $query = "SELECT departureTime, arrivalTime FROM flights WHERE id = $id";
+    $query = "SELECT departureTime, arrivalTime FROM flights WHERE id ='".$id."'";
     $sth = $db->prepare($query);
     $sth->execute();
     $result = $sth->fetch();
-    return $result[1] - $result[0];
+    $datetime1 = new DateTime($result[0]);
+    $datetime2 = new DateTime($result[1]);
+    $interval = $datetime1->diff($datetime2);
+    return $interval->format(' %hh%i ');
 }
 
 function isWeekEnd(){
