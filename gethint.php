@@ -9,23 +9,41 @@ $db = connexpdo($dsn, $user, $password);
 
 
 $a = array();
-$query = "SELECT airportcode FROM taxes ORDER BY city";
+$tab = [];
+$query = "SELECT originairport, origincity FROM flights ORDER BY origincity";
 $result = $db->prepare($query);
 $result->execute();
 $res = $result->fetchAll();
-foreach ($res as $data){
-    array_push($a, $data[0]);
-}
+$compteur=0;
 
+foreach ($res as $data){
+    if ($compteur > 0 && $tab["ville"][$compteur-1] == trim($data[1]))
+    {
+        $compteur--;
+    }
+    $tab["code"][$compteur] =trim($data[0]);
+    $tab["ville"][$compteur]=trim($data[1]);
+    $compteur++;
+
+}
+//$tab["code"] = array_unique($tab["code"]);
+//$tab["ville"] = array_unique($tab["ville"]);
 $q = "";
 $hint = "";
 
 if ($q == "") {
     foreach ($a as $name) {
-        $hint .= ",$name";
+        if ($hint == "")
+        {
+            $hint = "$name";
+        }else{
+            $hint .= ",$name";
+        }
+
     }
 }
-echo $hint;
+echo json_encode($tab);
+//echo $tab;
 
 
 ?>

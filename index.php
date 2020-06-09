@@ -89,5 +89,5 @@ echo '<!doctype html>
         <span class="text-muted">Place sticky footer content here.</span>
     </div>
 </footer>
-<script src="JS/test.js"></script>
+<script src="JS/ajax.js"></script>
 </html>';
