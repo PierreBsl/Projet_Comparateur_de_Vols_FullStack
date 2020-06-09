@@ -1,11 +1,7 @@
 <?php
 include 'controller.php';
-$depart = $_SESSION['originAirport'];
-$arrivee = $_SESSION['destinationAirport'];
-$date = $_SESSION['departDate'];
 $nbrAdults = $_SESSION['nbrAdultes'];
 $nbrEnfants = $_SESSION['nbrEnfants'];
-$volDirect = $_SESSION['volDirectCheck'];
 
 echo '<!DOCTYPE html>
 <html lang="en" class="h-100">
@@ -29,19 +25,35 @@ echo '<!DOCTYPE html>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Vols Disponibles</h1>
+        <h1 id="mainIntro" class="display-4 text-center">Votre Réservation</h1>
         <br><br>
-        <div class="row">
-    <div class="container col-md-8">';
-
+ <div class="row">
+    <div class="col col-md-7">';
+echo '<form action="confirmationVol.php?createUser" method="post">';
+for ($i = 0; $i < $nbrAdults; $i++) {
+    CreateFormAdult($i + 1);
+}
+for ($i = 0; $i < $nbrEnfants; $i++) {
+    CreateFormEnfant($i + 1);
+}
+echo '<button type ="submit" class="btn btn-lg btn-white" style="width: 66%">Valider</button>';
+echo '</form>';
 echo '</div>
 <div style="border-left:1px solid darkgrey;height:352px"></div>
-    <div class="col">
-        <div class="card" style="height: 353px">
-        </div>
-    </div>
+    <div class="col">';
+
+        displayFlight();
+
+    echo '</div>
 </main>
 </body>
+<br>
+<footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
+    <div class="container">
+        <span class="text-muted">Place sticky footer content here.</span>
+    </div>
+</footer>
+<script src="JS/test.js"></script>
 </html>';
 
 ?>

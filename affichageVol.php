@@ -33,16 +33,22 @@ echo '<!DOCTYPE html>
         <br><br>
         <div class="row">
     <div class="container col-md-8">';
-
 readFlights();
 echo '</div>
 <div style="border-left:1px solid darkgrey;height:352px"></div>
     <div class="col">
         <div class="card" style="height: 353px">
+            <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
         </div>
     </div>
 </main>
 </body>
+<footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
+    <div class="container">
+        <span class="text-muted">Place sticky footer content here.</span>
+    </div>
+</footer>
+<script src="JS/test.js"></script>
 </html>';
 
 ?>

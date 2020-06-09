@@ -7,6 +7,42 @@ if (isset($_GET["func"]))
     if ($_GET["func"]=="readFlights"){
         redirectFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
     }
+    if ($_GET["func"]=="selectedFlight"){
+        selectedFlight($_GET['id']);
+    }
+}
+
+function selectedFlight($idVol){
+    global  $db;
+
+    $query1 = "SELECT route, distancekm, departuretime, arrivaltime FROM flights WHERE id ='".$idVol."'";
+    $sth = $db->prepare($query1);
+    $sth->execute();
+    $result=$sth->fetchAll();
+
+    $_SESSION['selectedVolId']=$_GET["id"];
+    $_SESSION['selectedVolDeparture']=$result[0]['departuretime'];
+    $_SESSION['selectedVolArrival']=$result[0]['arrivaltime'];
+    $_SESSION['selectedVolDate']=$_SESSION['departDate'];
+
+    header("Location: confirmationVol.php");
+
+}
+function displayFlight(){
+
+    $unixTimestamp = strtotime($_SESSION['selectedVolDate']);
+    $daypropre = date("d/m/Y", $unixTimestamp);
+
+    echo '<div class="card">';
+    echo '<h5 class="card-header"> Vol #' . $_SESSION['selectedVolId'] . '</h5>';
+    echo '<div class="card-body">';
+    echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
+    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '<hr>';
+    echo '<h5 class="card-text">Price €</h5>';
+    echo '</div>';
+    echo '</div><br>';
+
 }
 
 function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
@@ -19,29 +55,6 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
     $_SESSION['nbrEnfants']=$nbrEnfants;
     $_SESSION['volDirectCheck']=$volDirect;
 
-}
-
-function buildForm() {
-
-    if (isset($_POST['originAirport']) && isset($_POST['destinationAirport']) && isset($_POST['departDate']) && isset($_POST['nbrAdultes']) && isset($_POST['nbrEnfants'])) {
-        $nombreAdultes = $_POST['nbrAdultes'];
-        $nombreEnfants = $_POST['nbrEnfants'];
-
-        //$bdd = connexpdo('pgsql:dbname=avion;host=localhost;port=5432', 'postgres', 'new_password');
-        //$query = $bdd->prepare("SELECT state FROM taxes WHERE city = " . $_POST['originAirport']);
-        //$query->execute();
-        //$result = $query->fetch();
-        //print_r($result[0]);
-        echo '<form action = "">';
-        for ($i = 0; $i < $nombreAdultes; $i++) {
-            CreateFormAdult($i + 1);
-        }
-        for ($i = 0; $i < $nombreEnfants; $i++) {
-            CreateFormEnfant($i + 1);
-        }
-        echo '<button type ="submit" class="btn btn-lg btn-white" style="width: 66%">Valider</button>';
-        echo '</form>';
-    }
 }
 
 function readFlights(){
@@ -76,8 +89,10 @@ function readFlights(){
     $query = "SELECT origincity, destinationcity FROM flights WHERE route ='".$route."'";
     $origin = $db->query($query);
     foreach ($origin as $data) {
-        $origincity=$data['origincity'];
-        $destinationcity=$data['destinationcity'];
+        $origincity = $data['origincity'];
+        $destinationcity = $data['destinationcity'];
+        $_SESSION['origincity'] = $origincity;
+        $_SESSION['destinationcity'] = $destinationcity;
     }
 
     if($nbr_Flight>=1) {
@@ -107,8 +122,8 @@ function readFlights(){
             echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
             echo '<p class="card-text">' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' . $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
             echo '<hr>';
-            echo '<h5 class="card-text">Price €</h5>';
-            echo '<form method="POST" action="confirmationVol.php?id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
+            echo '<h5 class="card-text">Price €</h5>'; //Gérer le prix du Billet
+            echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';
             echo '</div><br>';
 
@@ -140,13 +155,10 @@ function CreateFormAdult($id){
     $todayDay = $today['mday'];
     $lastYear = $todayYear-4;
     echo ' 
- <br>
  <div class="row">
-    <div class="col col-md-8">
+    <div class="col col-mx-auto">
         <div class="card">
-                    <div class="card-header">
-                    Adulte n°'.$id.'
-</div>
+            <div class="card-header">Adulte n°'.$id.'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -172,6 +184,7 @@ function CreateFormAdult($id){
         </div>
     </div>
  </div>
+ <br>
  ';
 }
 
@@ -182,13 +195,10 @@ function CreateFormEnfant($id){
     $todayDay = $today['mday'];
     $lastYear = $todayYear-4;
     echo ' 
- <br>
 <div class="row">
-    <div class="col col-md-8">
+    <div class="col col-mx-auto">
         <div class="card">
-                            <div class="card-header">
-                    Enfant n°'.$id.'
-</div>
+            <div class="card-header">Enfant n°'.$id.'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -208,6 +218,7 @@ function CreateFormEnfant($id){
         </div>
     </div>
  </div>
+ <br>
  ';
 
 }

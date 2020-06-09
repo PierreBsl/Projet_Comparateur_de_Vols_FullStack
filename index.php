@@ -82,6 +82,7 @@ echo '<!doctype html>
     </div>
     <br>
 </main>
+</body>
 
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
