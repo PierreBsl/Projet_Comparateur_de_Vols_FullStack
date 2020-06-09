@@ -10,6 +10,53 @@ if (isset($_GET["func"]))
     if ($_GET["func"]=="selectedFlight"){
         selectedFlight($_GET['id'], $_GET['price'], $_GET['capacity'], $_GET['travelTime']);
     }
+    if ($_GET["func"]=="createUser"){
+        for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
+            $k =$i+1;
+            createUser($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], true, $_SESSION['price']);
+        }
+        for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
+            $k =$i+1;
+            createUser($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], "", $_POST['birthAdult'.$k], false, $_SESSION['price']);
+        }
+    }
+    if ($_GET["func"]=="displayFlight"){
+        displayFlight();
+    }
+}
+function createUser($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
+    global  $db;
+
+    $numeroCommande = 1;
+
+    $q = "SELECT MAX(id) FROM users ";
+    $r = $db->query($q);
+    foreach ($r as $data) {
+        $numeroCommande=$data['id']+1;
+    }
+
+    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sqlR1 = $db->prepare($sql1);
+    $sqlR1->execute([$numeroCommande, $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
+
+    $_SESSION['commande'] = $numeroCommande;
+    header( "Location:confirmationVol.php");
+
+}
+
+function ConnectUser($mail, $birth) {
+    global  $db;
+
+    $q = 'SELECT id FROM users WHERE mail = "'.$mail.'" AND  birth = "'.$birth.'"';
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $r = $sth->fetch();
+
+    if ($r[0]) {
+        $_SESSION["userId"] = $r[0];
+    } else {
+        header("Location:index.php");
+    }
 }
 
 function selectedFlight($idVol, $price, $capacity, $travelTime){
@@ -31,8 +78,8 @@ function selectedFlight($idVol, $price, $capacity, $travelTime){
     header("Location: confirmationVol.php");
 
 }
-function displayFlight(){
 
+function displayCommande(){
     $unixTimestamp = strtotime($_SESSION['selectedVolDate']);
     $daypropre = date("d/m/Y", $unixTimestamp);
 
@@ -50,15 +97,50 @@ function displayFlight(){
     echo '<div class="col">';
     echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
     echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+    echo '</p>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
     echo '<div class="card-footer">';
-    echo '<h5 class="card-text">Price '.$_SESSION['price'].'€</h5>';
+    echo '<div class="row">';
+    echo '<div class="col">';
+    echo '<p class="card-text">- ' . $_SESSION['nbrAdultes'] . ' x Adulte(s) &nbsp; : &nbsp; ' . $_SESSION['price'] . '€</p>';
+    $enfantPrice = $_SESSION['price'] / 2;
+    echo '<p class="card-text">- ' . $_SESSION['nbrEnfants'] . ' x Enfant(s) &nbsp; : &nbsp; ' . $enfantPrice . '€';
+    echo '</div>';
+    echo '<div class="col">';
+    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Total Price ' . getTotPrice() . '€</h5>';
+    echo '</div>';
+    echo '</div>';
     echo '</div>';
     echo '</div><br>';
+}
 
+function displayFlight(){
+
+    $unixTimestamp = strtotime($_SESSION['selectedVolDate']);
+    $daypropre = date("d/m/Y", $unixTimestamp);
+
+    echo '<div class="card">';
+        echo '<h5 class="card-header"> Vol #' . $_SESSION['selectedVolId'] . '</h5>';
+        echo '<div class="card-body">';
+        echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
+            echo '<div class="row" >';
+                echo '<div class="col">';
+                    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
+                echo '</div>';
+                echo '<div class="col">';
+                    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
+                echo '</div>';
+                echo '<div class="col">';
+                    echo '<p class="card-text">Capacité Restante <br>';
+                    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+                    echo '</p>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+    echo '</div><br>';
 }
 
 function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
@@ -270,8 +352,95 @@ function isWeekEnd(){
     else return 0;
 }
 
-function displayCardbyPassenger(){
+function displayCardByAdult($numeroCommande){
+    global  $db;
 
+    $q = 'SELECT nom, prenom, mail, birth FROM users WHERE id = "'.$numeroCommande.'"';
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $r = $sth->fetchAll();
+    $nAdultes=0;
+
+    for ($k = 0; $k < $_SESSION['nbrAdultes']; $k++) {
+        $nAdultes = $nAdultes +1;
+        echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Adulte n°'.$nAdultes.'</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$r[$k]['nom'].'&nbsp;'.$r[$k]['prenom'].' 
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        '.$r[$k]['mail'].'
+                    </div>
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$r[$k]['birth'].'        
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            <h5>Prix du billet : '.$_SESSION['price'].'€</h5>
+            </div>
+        </div>
+    </div>
+ </div>
+ <br>';
+    }
+}
+function displayCardByChildren($numeroCommande){
+    global  $db;
+
+    $q = 'SELECT nom, prenom, birth FROM users WHERE id = "'.$numeroCommande.'"';
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $r = $sth->fetchAll();
+    $nEnfants=0;
+
+    for ($k = 0; $k < $_SESSION['nbrEnfants']; $k++) {
+        $nEnfants = $nEnfants +1;
+        echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Adulte n°'.$nEnfants.'</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$r[$k]['nom'].'&nbsp;'.$r[$k]['prenom'].' 
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$r[$k]['birth'].'  
+                    </div>
+                    <div class="form-group col-md-6">
+      
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">';
+            $pChildren = $_SESSION['price']/2;
+            echo '<h5>Prix du billet : '.$pChildren.'€</h5>
+            </div>
+        </div>
+    </div>
+ </div>
+ <br>';
+    }
 }
 
 function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
@@ -316,7 +485,7 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
 }
 
 function getTotPrice(){
-    return $_SESSION["nbrEnfants"] * $_SESSION["prix"] / 2 + $_SESSION["nbrEnfants"] * $_SESSION["prix"];
+    return $_SESSION["nbrEnfants"] * $_SESSION["price"] / 2 + $_SESSION["nbrAdultes"] * $_SESSION["price"];
 }
 
 function getRemplissage($capacteRestance){

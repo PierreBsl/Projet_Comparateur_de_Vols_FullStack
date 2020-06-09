@@ -29,23 +29,39 @@ echo '<!DOCTYPE html>
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-echo '<form action="controller.php?func=createUser" method="post">';
-for ($i = 0; $i < $nbrAdults; $i++) {
-    CreateFormAdult($i + 1);
-}
-for ($i = 0; $i < $nbrEnfants; $i++) {
-    CreateFormEnfant($i + 1);
-}
-echo '<button type ="submit" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
-echo '</form>';
-echo '</div>
+if ($_SESSION['commande']){
+    for ($i = 0; $i < $nbrAdults; $i++) {
+        displayCardByAdult($_SESSION['commande']);
+    }
+    for ($i = 0; $i < $nbrEnfants; $i++) {
+        displayCardByChildren($_SESSION['commande']);
+    }
+    echo '</div>
 <div style="border-left:1px solid darkgrey;height:352px"></div>
     <div class="col">';
 
-        displayFlight();
+    displayCommande();
 
+    echo '</div>';
+}else {
+    echo '<form action="controller.php?func=createUser" method="post">';
+
+    for ($i = 0; $i < $nbrAdults; $i++) {
+        CreateFormAdult($i + 1);
+    }
+    for ($i = 0; $i < $nbrEnfants; $i++) {
+        CreateFormEnfant($i + 1);
+    }
+    echo '<button name="validation" type ="submit" onclick="" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
+    echo '</form>';
     echo '</div>
-</main>
+<div style="border-left:1px solid darkgrey;height:352px"></div>
+    <div class="col">';
+    displayFlight();
+    echo '</div>';
+}
+
+echo '</main>
 </body>
 <br>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
