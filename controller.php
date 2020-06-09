@@ -105,10 +105,8 @@ function readFlights(){
     $sth = $db->prepare($query1);
     $sth->execute();
     $result=$sth->fetchAll();
-    $query2 = "SELECT fillingrate, farecode, weflights, departuretime, arrivaltime FROM companyprices WHERE route ='".$route."' ";
-    $sth1 = $db->prepare($query2);
-    $sth1->execute();
-    $result1=$sth->fetchAll();
+
+    dateDiff();
 
     for ($k = 0; $k < $nbr_Flight; $k++) {
         echo '<div class="card">';
@@ -130,7 +128,7 @@ function readFlights(){
         echo '</div>';
         echo '</div>';
         echo '<hr>';
-        echo '<h5 class="card-text">À partir de 150€</h5>';
+        echo '<h5 class="card-text">À partir de '.getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id']))).'€</h5>';
         echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
         echo '</div>';
         echo '</div><br>';
@@ -214,10 +212,19 @@ function CreateFormEnfant($id){
 
 function dateDiff(){
     $today = getdate();
-    $date1 = new DateTime($today['wday']);
-    $date2 = new DateTime($_SESSION['dayOfWeek']);
-    $interval = $date1->diff($date2, true);
-    return $interval->format('%w');
+    $today = $today['mday'];
+    $_SESSION['departDate'];
+    $weekDay1 = $_SESSION['departDate'][8].$_SESSION['departDate'][9];
+    $diff=$weekDay1-$today;
+    if($diff > 3){
+        return 3;
+    } if ($diff > 10){
+        return 10;
+    } if ($diff > 21){
+        return 21;
+    } else {
+        return 0;
+    }
 }
 
 function travelTime($id){
@@ -244,9 +251,9 @@ function flightCapacity($id){
 
 function isWeekEnd(){
     if($_SESSION['dayOfWeek'] == 0 || $_SESSION['dayOfWeek'] == 6) {
-        return true;
+        return 1;
     }
-    else return false;
+    else return 0;
 }
 
 function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
