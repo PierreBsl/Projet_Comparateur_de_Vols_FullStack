@@ -36,17 +36,16 @@ echo '<!DOCTYPE html>
 readFlights();
 echo '</div>
 <div style="border-left:1px solid darkgrey;height:352px"></div>
-    <div class="col">';
-                $meteo = "";
-                $meteo = "<a target=\"_blank\" href=\"https://hotelmix.fr/weather/nantes-876\"><img src=\"https://w.bookcdn.com/weather/picture/3_876_1_3_e65817_430_ffffff_333333_08488D_1_ffffff_333333_0_6.png?scode=124&domid=581&anc_id=42628\" alt=\"booked.net\"/></a>";
-                echo $meteo;
-                echo '
-    </div>
+    <div class="col">
+                <div class="card" style="height: 353px">
+                <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
+                </div>
+            </div>
 </main>
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 <script src="JS/test.js"></script>

@@ -10,17 +10,13 @@ $db = connexpdo($dsn, $user, $password);
 
 $a = array();
 $tab = [];
-$query = "SELECT originairport, origincity FROM flights ORDER BY origincity";
+$query = "SELECT code, city FROM ville ORDER BY city";
 $result = $db->prepare($query);
 $result->execute();
 $res = $result->fetchAll();
 $compteur=0;
 
 foreach ($res as $data){
-    if ($compteur > 0 && $tab["ville"][$compteur-1] == trim($data[1]))
-    {
-        $compteur--;
-    }
     $tab["code"][$compteur] =trim($data[0]);
     $tab["ville"][$compteur]=trim($data[1]);
     $compteur++;

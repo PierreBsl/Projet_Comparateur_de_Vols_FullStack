@@ -50,7 +50,7 @@ echo '</div>
 <br>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 <script src="JS/test.js"></script>

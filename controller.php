@@ -39,10 +39,10 @@ function displayFlight(){
     echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
     echo '<div class="row" >';
     echo '<div class="col">';
-    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
     echo '</div>';
     echo '<div class="col">';
-    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
     echo '</div></div>';
     echo '<hr>';
     echo '<h5 class="card-text">Price 150€</h5>';
