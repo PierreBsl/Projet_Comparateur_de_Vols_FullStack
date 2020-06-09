@@ -129,11 +129,10 @@ function readFlights(){
         echo '</div>';
         echo '<hr>';
         echo '<h5 class="card-text">À partir de '.getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id']))).'€</h5>';
-        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
+        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id']))).'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
         echo '</div>';
         echo '</div><br>';
     }
-    echo "Nombre Flight: ".$nbr_Flight;
 }
 
 function CreateFormAdult($id){
@@ -245,8 +244,8 @@ function flightCapacity($id){
     $sth = $db->prepare($query);
     $sth->execute();
     $result = $sth->fetch();
-    $places_restantes = $result[1]/$result[0]*100;
-    return $places_restantes;
+    $places_restantes = $result[1] / $result[0] * 100;
+    return (int) $places_restantes;
 }
 
 function isWeekEnd(){
@@ -254,6 +253,10 @@ function isWeekEnd(){
         return 1;
     }
     else return 0;
+}
+
+function displayCardbyPassenger(){
+
 }
 
 function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
@@ -268,12 +271,12 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
 
     $result1[0][2] = trim($result1[0][2]);
 
-    $query2 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND weFlights = ".$weFlight."AND dateToDeparture = ".$dateToDeparture;
+    $query2 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND ( weFlights = ".$weFlight." AND dateToDeparture = ".$dateToDeparture.")";
     $sth2 = $db->prepare($query2);
     $sth2->execute();
     $result2 = $sth2->fetch();
 
-    $query3 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND weFlights = ".$weFlight."AND fillingRate = ".$remplissage;
+    $query3 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND ( weFlights = ".$weFlight." AND fillingRate = ".$remplissage.")";
     $sth3 = $db->prepare($query3);
     $sth3->execute();
     $result3 = $sth3->fetch();
@@ -296,6 +299,7 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
 
     return $priceFly + $result4[0] + $result5[0];
 }
+
 function getRemplissage($capacteRestance){
     if($capacteRestance > 60){
         return 40;
