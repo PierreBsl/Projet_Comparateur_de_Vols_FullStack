@@ -297,7 +297,13 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     $sth5->execute();
     $result5 = $sth5->fetch();
 
+    $_SESSION["prix"] =  $priceFly + $result4[0] + $result5[0];
+
     return $priceFly + $result4[0] + $result5[0];
+}
+
+function getTotPrice(){
+    return $_SESSION["nbrEnfants"] * $_SESSION["prix"] / 2 + $_SESSION["nbrEnfants"] * $_SESSION["prix"];
 }
 
 function getRemplissage($capacteRestance){

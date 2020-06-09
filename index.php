@@ -50,8 +50,10 @@ echo '<!doctype html>
                                 </div>
                             </div>
                             <div class="form-group">
-                                Date de départ
-                                <input type="date" class="form-control" name="departDate" placeholder="Départ le" required>
+                                Date de départ';
+                                $today = date("Y-m-d");
+                                echo $today;
+                                echo '<input type="date" class="form-control" min="'.$today.'" name="departDate" placeholder="Départ le" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -71,10 +73,11 @@ echo '<!doctype html>
                 </div>
             </div>
             <div style="border-left:1px solid darkgrey;height:352px"></div>
-            <div class="col">
-                <div class="card" style="height: 353px">
-                <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
-                </div>
+            <div class="col">';
+                $meteo = "";
+                $meteo = "<a target=\"_blank\" href=\"https://hotelmix.fr/weather/nantes-876\"><img src=\"https://w.bookcdn.com/weather/picture/3_876_1_3_e65817_430_ffffff_333333_08488D_1_ffffff_333333_0_6.png?scode=124&domid=581&anc_id=42628\" alt=\"booked.net\"/></a>";
+                echo $meteo;
+                echo '
             </div>
         </div>
      <br>
