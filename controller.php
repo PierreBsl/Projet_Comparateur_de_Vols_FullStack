@@ -8,11 +8,11 @@ if (isset($_GET["func"]))
         redirectFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
     }
     if ($_GET["func"]=="selectedFlight"){
-        selectedFlight($_GET['id']);
+        selectedFlight($_GET['id'], $_GET['price'], $_GET['capacity'], $_GET['travelTime']);
     }
 }
 
-function selectedFlight($idVol){
+function selectedFlight($idVol, $price, $capacity, $travelTime){
     global  $db;
 
     $query1 = "SELECT route, distancekm, departuretime, arrivaltime FROM flights WHERE id ='".$idVol."'";
@@ -20,10 +20,13 @@ function selectedFlight($idVol){
     $sth->execute();
     $result=$sth->fetchAll();
 
-    $_SESSION['selectedVolId']=$_GET["id"];
-    $_SESSION['selectedVolDeparture']=$result[0]['departuretime'];
-    $_SESSION['selectedVolArrival']=$result[0]['arrivaltime'];
-    $_SESSION['selectedVolDate']=$_SESSION['departDate'];
+    $_SESSION['selectedVolId'] = $idVol;
+    $_SESSION['selectedVolDeparture'] = $result[0]['departuretime'];
+    $_SESSION['selectedVolArrival'] = $result[0]['arrivaltime'];
+    $_SESSION['selectedVolDate'] = $_SESSION['departDate'];
+    $_SESSION['price'] = $price;
+    $_SESSION['$capacity'] = $capacity;
+    $_SESSION['travelTime'] = $travelTime;
 
     header("Location: confirmationVol.php");
 
@@ -39,13 +42,20 @@ function displayFlight(){
     echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
     echo '<div class="row" >';
     echo '<div class="col">';
-    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br>le '.$daypropre.'</p>';
+    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
     echo '</div>';
     echo '<div class="col">';
-    echo '<p class="card-text">' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
-    echo '</div></div>';
-    echo '<hr>';
-    echo '<h5 class="card-text">Price 150€</h5>';
+    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
+    echo '</div>';
+    echo '<div class="col">';
+    echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
+    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '<div class="card-footer">';
+    echo '<h5 class="card-text">Price '.$_SESSION['price'].'€</h5>';
     echo '</div>';
     echo '</div><br>';
 
@@ -109,6 +119,10 @@ function readFlights(){
     dateDiff();
 
     for ($k = 0; $k < $nbr_Flight; $k++) {
+        $capacity = flightCapacity($result[$k]['id']);
+        $price = getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id'])));
+        $travelTime = travelTime($result[$k]['id']);
+
         echo '<div class="card">';
         echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
         echo '<div class="card-body">';
@@ -119,28 +133,29 @@ function readFlights(){
             $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
         echo '</div>';
         echo '<div class="col">';
-        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.travelTime($result[$k]['id']);
+        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$travelTime;
         echo '</div>';
         echo '<div class="col">';
         echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
-        echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.flightCapacity($result[$k]['id']).'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
+        echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$capacity.'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
         echo '<hr>';
-        echo '<h5 class="card-text">À partir de '.getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id']))).'€</h5>';
-        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id']))).'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
+        echo '<h5 class="card-text">À partir de '.$price.'€</h5>';
+        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.$price.'&travelTime='.$travelTime.'&capacity='.$capacity.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
         echo '</div>';
         echo '</div><br>';
     }
 }
 
 function CreateFormAdult($id){
-    $today = getDate();
-    $todayYear = $today['year'];
-    $todayMonth = $today['mon'];
-    $todayDay = $today['mday'];
-    $lastYear = $todayYear-4;
+    $year = date("Y");
+    $year1 = $year-4;
+    $year2 = $year - 130;
+    $date = date ($year1."-m-d");
+    $actualDate = date($year2."-m-d");
+
     echo '
  <div class="row">
     <div class="col col-mx-auto">
@@ -164,7 +179,7 @@ function CreateFormAdult($id){
                         </div>
                         <div class="form-group col-md-6">
                           Date de Naissance
-                          <input type="date" class="form-control" max="'.$lastYear.'-'.$todayMonth.'-'.$todayDay.'" name="birthAdult'.$id.'">
+                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'">
                         </div>
                 </div>
             </div>
@@ -176,11 +191,11 @@ function CreateFormAdult($id){
 }
 
 function CreateFormEnfant($id){
-    $today = getDate();
-    $todayYear = $today['year'];
-    $todayMonth = $today['mon'];
-    $todayDay = $today['mday'];
-    $lastYear = $todayYear-4;
+    $year = date("Y");
+    $year = $year-4;
+    $date = date($year."-m-d");
+    $actualDate = date("Y-m-d");
+
     echo '
 <div class="row">
     <div class="col col-mx-auto">
@@ -199,7 +214,7 @@ function CreateFormEnfant($id){
                 </div>
                 <div class="form-group">
                       Date de Naissance
-                      <input type="date" class="form-control" min="'.$lastYear.'-'.$todayMonth.'-'.$todayDay.'" name="birthEnfant'.$id.'">
+                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'">
                 </div>
             </div>
         </div>
@@ -215,12 +230,12 @@ function dateDiff(){
     $_SESSION['departDate'];
     $weekDay1 = $_SESSION['departDate'][8].$_SESSION['departDate'][9];
     $diff=$weekDay1-$today;
-    if($diff > 3){
-        return 3;
+    if($diff > 21){
+        return 21;
     } if ($diff > 10){
         return 10;
-    } if ($diff > 21){
-        return 21;
+    } if ($diff > 3){
+        return 3;
     } else {
         return 0;
     }
@@ -296,8 +311,6 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     $sth5 = $db->prepare($query5);
     $sth5->execute();
     $result5 = $sth5->fetch();
-
-    $_SESSION["prix"] =  $priceFly + $result4[0] + $result5[0];
 
     return $priceFly + $result4[0] + $result5[0];
 }
