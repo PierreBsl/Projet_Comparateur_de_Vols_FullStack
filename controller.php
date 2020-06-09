@@ -34,7 +34,7 @@ function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
 
@@ -43,7 +43,7 @@ function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adulte, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense]);
 
