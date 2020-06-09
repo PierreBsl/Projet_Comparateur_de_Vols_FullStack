@@ -211,11 +211,13 @@ function CreateFormEnfant($id){
  <br>
  ';
 }
+
 function dateDiff(){
-    $today = date_create(getdate());
-    $date = date_create($_SESSION['dayOfWeek']);
-    $interval = date_diff($date, $today, true);
-    return (int) $interval->format('%d');
+    $today = getdate();
+    $date1 = new DateTime($today['wday']);
+    $date2 = new DateTime($_SESSION['dayOfWeek']);
+    $interval = $date1->diff($date2, true);
+    return $interval->format('%w');
 }
 
 function travelTime($id){
@@ -245,4 +247,56 @@ function isWeekEnd(){
         return true;
     }
     else return false;
+}
+
+function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
+    global $db;
+    $query1 = "SELECT originairport, destinationairport, route FROM flights WHERE id = '".$id."'";
+    $sth1 = $db->prepare($query1);
+    $sth1->execute();
+    $result1=$sth1->fetchAll();
+
+    //print_r($result1[0][2]);
+    //echo $result1[1];
+
+    $result1[0][2] = trim($result1[0][2]);
+
+    $query2 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND weFlights = ".$weFlight."AND dateToDeparture = ".$dateToDeparture;
+    $sth2 = $db->prepare($query2);
+    $sth2->execute();
+    $result2 = $sth2->fetch();
+
+    $query3 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND weFlights = ".$weFlight."AND fillingRate = ".$remplissage;
+    $sth3 = $db->prepare($query3);
+    $sth3->execute();
+    $result3 = $sth3->fetch();
+
+    if ($result2[0] > $result3[0]){
+        $priceFly = $result2[0];
+    } else {
+        $priceFly = $result3[0];
+    }
+
+    $query4 = "SELECT surcharge FROM taxes WHERE airportCode = '".$result1[0][0]."'";
+    $sth4 = $db->prepare($query4);
+    $sth4->execute();
+    $result4 = $sth4->fetch();
+
+    $query5 = "SELECT surcharge FROM taxes WHERE airportCode = '".$result1[0][1]."'";
+    $sth5 = $db->prepare($query5);
+    $sth5->execute();
+    $result5 = $sth5->fetch();
+
+    return $priceFly + $result4[0] + $result5[0];
+}
+function getRemplissage($capacteRestance){
+    if($capacteRestance > 60){
+        return 40;
+    } if ($capacteRestance > 30){
+        return 70;
+    } if ($capacteRestance > 10){
+        return 90;
+    } else {
+        return 100;
+    }
 }
