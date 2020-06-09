@@ -128,7 +128,7 @@ function readFlights(){
             echo '</div>';
             echo '<div class="col">';
             echo '<p class="card-text">Places Restantes <br> <div class="progress">';
-            echo '<div id="progress-bar" class="progress-bar bg-white" style="background-color:orangered !important;" aria-valuenow="'.flightCapacity($result[$k]['id']).'" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).'%</div>';
+            echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.flightCapacity($result[$k]['id']).'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
@@ -239,7 +239,7 @@ function travelTime($id){
 
 function flightCapacity($id){
     global $db;
-    $query = "SELECT flightsize, flightcapacitie FROM flights WHERE id ='".$id."'";
+    $query = "SELECT flightsize, flightcapacity FROM flights WHERE id ='".$id."'";
     $sth = $db->prepare($query);
     $sth->execute();
     $result = $sth->fetch();
