@@ -124,7 +124,7 @@ function readFlights(){
                 $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
             echo '</div>';
             echo '<div class="col">';
-            echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i> 1h20';
+            echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.travelTime($result[$k]['id']);
             echo '</div>';
             echo '<div class="col">';
             echo '<p class="card-text">Places Restantes <br> <div class="progress">';
