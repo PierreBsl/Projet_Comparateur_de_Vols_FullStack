@@ -133,7 +133,7 @@ function readFlights(){
             echo '</div>';
             echo '</div>';
             echo '<hr>';
-            echo '<h5 class="card-text">Price 150€</h5>';
+            echo '<h5 class="card-text">À partir de 150€</h5>';
             echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'"><button style="float: right; width: 30%" type="submit" class="btn btn-white">Select</button></form>';
             echo '</div>';
             echo '</div><br>';
@@ -142,7 +142,6 @@ function readFlights(){
         return;
     }
     echo "Nombre Flight: ".$nbr_Flight;
-
 }
 
 function CreateFormAdult($id){
@@ -218,6 +217,21 @@ function CreateFormEnfant($id){
  <br>
  ';
 
+}
+function dateDiff(){
+    $today = date_create(getdate());
+    $date = date_create($_SESSION['dayOfWeek']);
+    $interval = date_diff($date, $today, true);
+    return (int) $interval->format('%d');
+}
+
+function travelTime($id){
+    global $db;
+    $query = "SELECT departureTime, arrivalTime FROM flights WHERE id = $id";
+    $sth = $db->prepare($query);
+    $sth->execute();
+    $result = $sth->fetch();
+    return $result[1] - $result[0];
 }
 
 function isWeekEnd(){
