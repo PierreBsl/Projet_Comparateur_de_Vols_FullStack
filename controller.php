@@ -128,7 +128,7 @@ function readFlights(){
             echo '</div>';
             echo '<div class="col">';
             echo '<p class="card-text">Places Restantes <br> <div class="progress">';
-            echo '<div id="progress-bar" class="progress-bar bg-white" style="width: 75%; background-color:orangered !important;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>';
+            echo '<div id="progress-bar" class="progress-bar bg-white" style="background-color:orangered !important;" aria-valuenow="'.flightCapacity($result[$k]['id']).'" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).'%</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
@@ -235,6 +235,16 @@ function travelTime($id){
     $datetime2 = new DateTime($result[1]);
     $interval = $datetime1->diff($datetime2);
     return $interval->format(' %hh%i ');
+}
+
+function flightCapacity($id){
+    global $db;
+    $query = "SELECT flightsize, flightcapacitie FROM flights WHERE id ='".$id."'";
+    $sth = $db->prepare($query);
+    $sth->execute();
+    $result = $sth->fetch();
+    $places_restantes = $result[1]/$result[0]*100;
+    return $places_restantes;
 }
 
 function isWeekEnd(){
