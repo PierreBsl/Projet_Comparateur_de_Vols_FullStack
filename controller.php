@@ -128,7 +128,7 @@ function readFlights(){
             echo '</div>';
             echo '<div class="col">';
             echo '<p class="card-text">Places Restantes <br> <div class="progress">';
-            echo '<div id="progress-bar" class="progress-bar bg-white" style="width: 75%; background-color:orangered !important;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>';
+            echo '<div id="progress-bar" class="progress-bar bg-white" style="width: 75%; background-color:orangered !important;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
