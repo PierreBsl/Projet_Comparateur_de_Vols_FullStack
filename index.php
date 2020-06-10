@@ -19,8 +19,12 @@ echo '<!doctype html>
 <body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+        <div style="float: right">
+            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
+            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
@@ -30,16 +34,24 @@ echo '<!doctype html>
 if (isset($_GET["error"]))
 {
     if ($_GET["error"]=="villedepart"){
-        echo '<div class="alert alert-danger" role="alert">La ville de d\'arriver n\'existe pas !</div>';
+        echo '<div class="alert alert-danger" role="alert">L\'aéroport d\'arrivée n\'existe pas !</div>';
     }
     if ($_GET["error"]=="villearrivee"){
-        echo '<div class="alert alert-danger" role="alert">La ville d\'arriver n\'existe pas !</div>';
+        echo '<div class="alert alert-danger" role="alert">L\'aéroport d\'arrivée n\'existe pas !</div>';
     }
     if ($_GET["error"]=="trajetvide"){
-        echo '<div class="alert alert-warning" role="alert">Aucun vol pour ce jour-ci</div>';
+        echo '<div class="alert alert-warning" role="alert">Aucun vols pour ce jour-ci</div>';
     }
+    if ($_GET["error"]=="confirm"){
+        echo '<div class="confirm confirm-succes" role="alert">Votre Réservation à bien été enregistrée. Vous pouvez la consulter sur votre espace Client</div>';
+    }
+    if ($_GET["error"]=="cancelled"){
+        echo '<div class="confirm confirm-succes" role="alert">Votre Réservation à bien été annulée</div>';
+    }
+
 }
- echo '       <br><br>
+
+echo '       <br><br>
         <div class="row">
             <div class="col col-md-8">
                 <div class="card">

@@ -34,39 +34,109 @@ if (isset($_GET["func"]))
         $_SESSION['active'] = 3;
         header( "Location:confirmationVol.php");
     }
+    if ($_GET["func"]=="confirmUser"){
+
+        for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
+            confirmAdult();
+        }
+        for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
+            confirmChildren();
+        }
+        header( "Location:index.php?error=confirm");
+    }
+    if ($_GET["func"]=="deleteReservation"){
+            deleteReservation();
+    }
+
+}
+
+function deleteReservation(){
+    global $db;
+
+    $query = "DELETE FROM commande ";
+    $sth = $db->prepare($query);
+    $sth->execute();
+
+    header( "Location:index.php?error=cancelled");
+}
+
+function confirmAdult(){
+
+    global  $db;
+
+    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 1";
+    $result = $db->prepare($query);
+    $result->execute();
+    $res = $result->fetchAll();
+    foreach ($res as $data){
+        $nomA = $data['nom'];
+        $prenomA = $data['prenom'];
+        $mailA = $data['mail'];
+        $birthDateA = $data['birth'];
+        $isAdultA = $data['adult'];
+        $depenseA = $data['depense'];
+    }
+
+    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sqlR1 = $db->prepare($sql1);
+    $sqlR1->execute([$_SESSION['commande'], $nomA, $prenomA, $mailA, $birthDateA, $isAdultA, $depenseA, $_SESSION['selectedVolId']]);
+
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+}
+
+function confirmChildren(){
+
+    global  $db;
+
+    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 0";
+    $result = $db->prepare($query);
+    $result->execute();
+    $res = $result->fetchAll();
+    foreach ($res as $data){
+        $nomC = $data['nom'];
+        $prenomC = $data['prenom'];
+        $birthDateC = $data['birth'];
+        $isAdultC = $data['adult'];
+        $depenseC = $data['depense'];
+    }
+
+    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sqlR1 = $db->prepare($sql1);
+    $sqlR1->execute([$_SESSION['commande'], $nomC, $prenomC, '', $birthDateC, $isAdultC, $depenseC, $_SESSION['selectedVolId']]);
+
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
 }
 
 function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idReservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
-
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense, $_SESSION['selectedVolId']]);
 
 }
+
 function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense]);
-
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense, $_SESSION['selectedVolId']]);
 
 }
 
 function ConnectUser($mail, $birth) {
     global  $db;
 
-    $q = 'SELECT id FROM users WHERE mail = "'.$mail.'" AND  birth = "'.$birth.'"';
+    $q = "SELECT id FROM users WHERE mail = '".$mail."' AND  birth = '".$birth."'";
     $sth = $db->prepare($q);
     $sth->execute();
     $r = $sth->fetch();
@@ -108,10 +178,10 @@ function displayCommande(){
     echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
     echo '<div class="row" >';
     echo '<div class="col">';
-    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
+    echo '<p class="card-text"><i class="fa fa-map-marker"></i> &nbsp;' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
     echo '</div>';
     echo '<div class="col">';
-    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
+    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i> '.$_SESSION['travelTime'];
     echo '</div>';
     echo '<div class="col">';
     echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
@@ -134,6 +204,10 @@ function displayCommande(){
     echo '</div>';
     echo '</div>';
     echo '</div><br>';
+    echo '<form method="POST" action="controller.php?func=confirmUser"><button style="width: 100%" type="submit" class="btn btn-white">Valider la commande</button></form><br>';
+    echo '<form method="POST" action="controller.php?func=deleteReservation"><button style="width: 100%" type="submit" class="btn btn-white">Annuler la commande</button></form>';
+
+
 }
 
 function displayFlight(){
@@ -150,7 +224,7 @@ function displayFlight(){
     echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
     echo '</div>';
     echo '<div class="col">';
-    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
+    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i> &nbsp;'.$_SESSION['travelTime'];
     echo '</div>';
     echo '<div class="col">';
     echo '<p class="card-text">Capacité Restante <br>';
@@ -225,12 +299,16 @@ function readFlights(){
     $origincity="";
     $destinationcity="";
 
-    $query = "SELECT origincity, destinationcity FROM flights WHERE route ='".$route."'";
+    $query = "SELECT city FROM ville WHERE code = ' ".$depart."'";
     $origin = $db->query($query);
     foreach ($origin as $data) {
-        $origincity = $data['origincity'];
-        $destinationcity = $data['destinationcity'];
+        $origincity = $data['city'];
         $_SESSION['origincity'] = $origincity;
+    }
+    $query = "SELECT city FROM ville WHERE code = ' ".$arrivee."'";
+    $origin = $db->query($query);
+    foreach ($origin as $data) {
+        $destinationcity = $data['city'];
         $_SESSION['destinationcity'] = $destinationcity;
     }
 
@@ -238,8 +316,6 @@ function readFlights(){
     $sth = $db->prepare($query1);
     $sth->execute();
     $result=$sth->fetchAll();
-
-    dateDiff();
 
     for ($k = 0; $k < $nbr_Flight; $k++) {
         $capacity = flightCapacity($result[$k]['id']);
@@ -256,7 +332,7 @@ function readFlights(){
             $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
         echo '</div>';
         echo '<div class="col">';
-        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$travelTime;
+        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i> &nbsp;'.$travelTime;
         echo '</div>';
         echo '<div class="col">';
         echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
@@ -383,9 +459,8 @@ function travelTime($id){
     else {
         $interval = date_diff($timestamp2, $timestamp1);
     }
-    return $interval->format("%H:%I:%S");
+    return $interval->format("%Hh%Imin");
 }
-
 
 function flightCapacity($id){
     global $db;
@@ -407,7 +482,7 @@ function isWeekEnd(){
 function displayCardByAdult(){
     global  $db;
 
-    $q = "SELECT nom, prenom, mail, birth FROM users WHERE idcommande = ".$_SESSION['commande']." AND adult = 1";
+    $q = "SELECT nom, prenom, mail, birth FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 1";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -455,7 +530,7 @@ function displayCardByAdult(){
 function displayCardByChildren(){
     global  $db;
 
-    $q = "SELECT nom, prenom, birth FROM users WHERE idcommande = ".$_SESSION['commande']." AND adult = 0";
+    $q = "SELECT nom, prenom, birth FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 0";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -560,6 +635,16 @@ function getRemplissage($capacteRestance){
 function deletePeople($id){
     global $db;
 
+
+    $query1 = "SELECT idReservation FROM users WHERE id = ".$id;
+    $sth1 = $db->prepare($query1);
+    $sth1->execute();
+    $sth1->fetch();
+
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
     $query = "DELETE FROM users WHERE id = ".$id;
     $sth = $db->prepare($query);
     $sth->execute();
@@ -596,7 +681,7 @@ function affichageAdmin(){
 function adminDisplayAdult($id){
     global  $db;
 
-    $q = "SELECT nom, prenom, mail, birth, idcommande, depense FROM users WHERE id = ".$id;
+    $q = "SELECT nom, prenom, mail, birth, idcommande, depense, idReservation FROM users WHERE id = ".$id;
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -605,7 +690,7 @@ function adminDisplayAdult($id){
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult</div>
+            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -636,11 +721,10 @@ function adminDisplayAdult($id){
  <br>';
 }
 
-
 function adminDisplayEnfant($id){
     global  $db;
 
-    $q = "SELECT nom, prenom, birth, idcommande, depense FROM users WHERE id = ".$id;
+    $q = "SELECT nom, prenom, birth, idcommande, depense, idReservation FROM users WHERE id = ".$id;
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -648,7 +732,7 @@ function adminDisplayEnfant($id){
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant</div>
+            <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant - Vol n° : '.$result[0][5].'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">

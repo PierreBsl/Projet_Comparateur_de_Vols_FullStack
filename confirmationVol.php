@@ -27,24 +27,25 @@ echo '<!DOCTYPE html>
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+        <div style="float: right">
+            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
+            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
-<main role="main" class="flex-shrink-0">
-    <div class="container col-md-9">
+<main role="main" class="flex-shrink-0">';
+if ($_SESSION['active']==3){
+    echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Votre Réservation</h1>
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-if ($_SESSION['active']==3){
-    for ($i = 0; $i < $nbrAdults; $i++) {
         displayCardByAdult();
-    }
-    for ($i = 0; $i < $nbrEnfants; $i++) {
         displayCardByChildren();
-    }
+
     echo '</div>
 <div style="border-left:1px solid darkgrey;height:288px"></div>
     <div class="col">';
@@ -53,6 +54,11 @@ if ($_SESSION['active']==3){
 
     echo '</div>';
 }else {
+    echo '<div class="container col-md-9">
+        <h1 id="mainIntro" class="display-4 text-center">Vos Passagers</h1>
+        <br><br>
+ <div class="row">
+    <div class="col col-md-7">';
     echo '<form action="controller.php?func=createUser" method="post">';
 
     for ($i = 0; $i < $nbrAdults; $i++) {
@@ -61,7 +67,7 @@ if ($_SESSION['active']==3){
     for ($i = 0; $i < $nbrEnfants; $i++) {
         CreateFormEnfant($i + 1);
     }
-    echo '<button name="validation" type ="submit" onclick="" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
+    echo '<button name="validation" type ="submit" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
     echo '</form>';
     echo '</div>
 <div style="border-left:1px solid darkgrey;height:208px"></div>

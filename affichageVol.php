@@ -25,8 +25,12 @@ echo '<!DOCTYPE html>
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+        <div style="float: right">
+            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
+            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
@@ -40,7 +44,7 @@ echo '<!DOCTYPE html>
 
     echo'</div>
 
-<div class="container col-md-6">';
+<div class="container col-md-7">';
 
 readFlights();
 echo '</div>

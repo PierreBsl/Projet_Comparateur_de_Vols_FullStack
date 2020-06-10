@@ -3,10 +3,9 @@ include 'controller.php';
 require_once 'connexpdo.php';
 
 $year = date("Y");
+$today = date("Y-m-d");
 $year1 = $year-4;
-$year2 = $year - 130;
 $date = date ($year1."-m-d");
-$actualDate = date($year2."-m-d");
 
 echo '<!doctype html>
 <html lang="fr" class="h-100">
@@ -23,31 +22,32 @@ echo '<!doctype html>
 <body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+        <div style="float: right">
+            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+        </div>
     </nav>
 </header>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>
+        <h1 id="mainIntro" class="display-4 text-center">Connectez-Vous</h1>
         <br><br>
         <div class="row">
             <div class="col col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form action="controller.php?func=readFlights" method="POST">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    Email
-                                    <input type="text" class="form-control" name="userMail" autocomplete="off" placeholder="Votre adresse mail" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    Date de Naissance
-                                    <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthDate">
-                                </div>
+                        <form action="controller.php?func=connectUser" method="POST">
+                            <div class="form-group col-md-6">
+                                 Email
+                                 <input type="text" class="form-control" name="userMail" autocomplete="off" placeholder="Votre adresse mail" required>
                             </div>
-                            <button type="submit" class="btn btn-white">Suivant</button>
+                            <div class="form-group col-md-6">
+                                 Date de Naissance
+                                 <input type="date" class="form-control" min="'.$today.'" max="'.$date.'" name="birthDate">
+                            </div><br>
+                            <button style="margin-left:2%; width: 25%" type="submit" class="btn btn-outline-white">Connexion</button>                        
                         </form>
                     </div>
                 </div>
