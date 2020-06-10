@@ -1,7 +1,7 @@
 <?php
 
 require_once 'connexpdo.php';
-session_start();
+require_once "controller.php";
 
 global $db;
 
@@ -41,11 +41,12 @@ for ($k = 0; $k < $nbrflights; $k++) {
     else if ($price < $minimum){
         $minimum = $price;
     }
-    $diff=$maximum-$minimum;
-    $nprix=$maximum+$diff;
 }
-$tab = [];
+
+$tab=[];
+
 $tab['maxprice']=$maximum;
+$tab['minprice']=0;
 echo json_encode($tab);
 
 

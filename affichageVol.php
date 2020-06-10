@@ -12,7 +12,7 @@ $nbrEnfants = $_SESSION['nbrEnfants'];
 $volDirect = $_SESSION['volDirectCheck'];
 
 echo '<!DOCTYPE html>
-<html lang="fr" class="h-100">
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,12 +25,8 @@ echo '<!DOCTYPE html>
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
-        <div style="float: right">
-            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
-            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
-        </div>
     </nav>
 </header>
 <!-- Begin page content -->
@@ -40,11 +36,21 @@ echo '<!DOCTYPE html>
         <br><br>
 
 <div class="row">
-    <div class="container col">';
+    <div class="container col">
+        <form>
+            <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <h5>PRIX</h5><span class="text-muted"><small id="textSlide"></small></span>
+                <input id="range" style="margin-top: 3%" type="range" min="0" max="100" class="form-control-range" step="1" onchange="changeNumer">
+                <button id="searchButton"  style="margin-top: 4%;" type="button" class="btn btn-outline-white">Select</button>
+              </div>
+              </div>
+              </div>
+        </form>
+   </div>
 
-    echo'</div>
-
-<div class="container col-md-7">';
+<div id="allCard" class="container col-md-6">';
 
 readFlights();
 echo '</div>
@@ -63,8 +69,7 @@ echo '</div>
         <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
-<script src="JS/ajax.js"></script>
-
+<script src="JS/price.js"></script>
 </html>';
 
 ?>
