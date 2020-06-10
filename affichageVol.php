@@ -50,9 +50,12 @@ echo '<!DOCTYPE html>
         </form>
    </div>
 
-<div id="allCard" class="container col-md-6">';
-
-readFlights();
+<div id="allCard" class="container col-md-6">
+<div class="d-flex align-items-center">
+        <strong>Loading...</strong>
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>';
+//readFlights();
 echo '</div>
 <div style="border-left:1px solid darkgrey;height:352px"></div>
     <div class="container col-md-3">

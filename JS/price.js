@@ -77,6 +77,8 @@ function rangerVol(prix) {
 window.onload = function() {
     console.log("Debut SQL");
     maxPrice();
+    let valeurSlide= document.getElementById("range").value;
+    rangerVol(valeurSlide);
 
 };
 function changeNumer(){
@@ -87,6 +89,10 @@ function changeNumer(){
 
 function launchSearch(){
     let valeurSlide= document.getElementById("range").value;
+    document.getElementById("allCard").innerHTML = "<div class='d-flex align-items-center'>+" +
+        "<strong>Loading...</strong>+" +
+        "<div class='spinner-border ml-auto' role='status' aria-hidden='true'></div>+" +
+        "</div>";
     rangerVol(valeurSlide);
 
 }

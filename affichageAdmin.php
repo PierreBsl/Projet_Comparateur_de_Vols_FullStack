@@ -25,10 +25,11 @@ echo '<!doctype html>
 </header>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
-    <div class="container col-md-9">';
+    <div class="container col-md-10">
+        <h1 id="mainIntro" class="display-4 text-center">Menu Administrateur</h1><br><br>';
 
 affichageAdmin();
-        echo '</div>
+        echo '</div></div>
      <br>
 </form>
     </div>

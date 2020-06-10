@@ -343,7 +343,7 @@ function readFlights(){
         echo '</div>';
         echo '<hr>';
         echo '<h5 class="card-text">À partir de '.$price.'€</h5>';
-        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.$price.'&travelTime='.$travelTime.'&capacity='.$capacity.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Select</button></form>';
+        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.$price.'&travelTime='.$travelTime.'&capacity='.$capacity.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Sélectionner</button></form>';
         echo '</div>';
         echo '</div><br>';
     }
@@ -691,7 +691,7 @@ function adminDisplayAdult($id){
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
+            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adulte - Vol n° : '.$result[0][6].'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -714,7 +714,7 @@ function adminDisplayAdult($id){
             </div>
             <div class="card-footer">
             <h5>Prix total dépensé : '.$result[0][5].'€</h5>
-             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
         </div>
     </div>
@@ -750,7 +750,7 @@ function adminDisplayEnfant($id){
             </div>
             <div class="card-footer">
             <h5>Prix total dépensé : '.$result[0][4].'€</h5>
-            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
 
         </div>
