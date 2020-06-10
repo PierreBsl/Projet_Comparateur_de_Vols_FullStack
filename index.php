@@ -43,10 +43,10 @@ if (isset($_GET["error"]))
         echo '<div class="alert alert-warning" role="alert">Aucun vols pour ce jour-ci</div>';
     }
     if ($_GET["error"]=="confirm"){
-        echo '<div class="confirm confirm-succes" role="alert">Votre Réservation à bien été enregistrée. Vous pouvez la consulter sur votre espace Client</div>';
+        echo '<div class="alert alert-success" role="alert">Votre Réservation à bien été enregistrée. Vous pouvez la consulter sur votre espace Client</div>';
     }
     if ($_GET["error"]=="cancelled"){
-        echo '<div class="confirm confirm-succes" role="alert">Votre Réservation à bien été annulée</div>';
+        echo '<div class="alert alert-warning" role="alert">Votre Réservation à bien été annulée</div>';
     }
 
 }
