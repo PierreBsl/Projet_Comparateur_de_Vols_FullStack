@@ -42,6 +42,7 @@ if (isset($_GET["func"]))
         for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
             confirmChildren();
         }
+        deleteReservation();
         header( "Location:index.php?error=confirm");
     }
     if ($_GET["func"]=="deleteReservation"){
