@@ -32,6 +32,5 @@ function main() {
     console.log("Start");
     //onloadstart(showHint());
 
-
 }
 main();

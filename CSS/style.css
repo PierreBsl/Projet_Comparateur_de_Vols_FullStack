@@ -11,6 +11,11 @@ main > .container {
     color: orangered;
     border-color: orangered;
 }
+#range{
+    background: orangered;
+    border-color: orangered;
+    color: orangered;
+}
 #progress-bar
 {
     color: orangered;

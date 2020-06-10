@@ -10,7 +10,7 @@ $db = connexpdo($dsn, $user, $password);
 
 $a = array();
 $tab = [];
-$query = "SELECT code, city FROM ville ORDER BY city";
+$query = "SELECT code, city FROM ville ORDER BY city ";
 $result = $db->prepare($query);
 $result->execute();
 $res = $result->fetchAll();
@@ -22,9 +22,10 @@ foreach ($res as $data){
     $compteur++;
 
 }
+//$tab["code"] = array_unique($tab["code"]);
+//$tab["ville"] = array_unique($tab["ville"]);
 
 echo json_encode($tab);
-
 
 
 ?>

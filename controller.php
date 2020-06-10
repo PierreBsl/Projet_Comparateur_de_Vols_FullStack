@@ -6,6 +6,10 @@ session_start();
 
 if (isset($_GET["func"]))
 {
+
+    if ($_GET["func"] == "deletePeople"){
+        deletePeople($_GET['id']);
+    }
     if ($_GET["func"]=="readFlights"){
         redirectFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
         $_SESSION['active'] = 1;
@@ -45,7 +49,6 @@ function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
     $stmt->execute();
 
 }
-
 function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
 
     global  $db;
@@ -160,7 +163,26 @@ function displayFlight(){
 }
 
 function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
-    header("Location: affichageVol.php");
+    global  $db;
+    $query2 = "SELECT city FROM  ville WHERE code = ' ".$depart."'";
+    $result2 = $db->prepare($query2);
+    $result2->execute();
+    $res2 = $result2->fetchAll();
+
+    $query3 = "SELECT city FROM  ville WHERE code = ' ".$arrivee."'";
+    $result3 = $db->prepare($query3);
+    $result3->execute();
+    $res3 = $result3->fetchAll();
+
+    if(!isset($res2[0][0])){
+        header("Location: index.php?error=villedepart");
+    }else if(!isset($res3[0][0])){
+        header("Location: index.php?error=villearrivee");
+    }else{
+        header("Location: affichageVol.php");
+    }
+
+
 
     $_SESSION['originAirport']=$depart;
     $_SESSION['destinationAirport']=$arrivee;
@@ -180,28 +202,6 @@ function readFlights(){
     $nbrEnfants = $_SESSION['nbrEnfants'];
     $volDirect = $_SESSION['volDirectCheck'];
 
-    $query2 = "SELECT city FROM  ville WHERE code = ' ".$depart."'";
-    $result2 = $db->prepare($query2);
-    $result2->execute();
-    $res2 = $result2->fetchAll();
-
-    $query3 = "SELECT city FROM  ville WHERE code = ' ".$arrivee."'";
-    $result3 = $db->prepare($query3);
-    $result3->execute();
-    $res3 = $result3->fetchAll();
-
-    if(!isset($res2[0][0])){
-        echo '<div class="alert alert-danger" role="alert">
-            La ville de depart n\'existe pas <a href="index.php" title="Mon site" class="alert-link">
-            Revenir à la recherche</a>
-            </div>';
-    } if(!isset($res3[0][0])){
-        echo '<div class="alert alert-danger" role="alert">
-            La ville de d\'arrivée n\'existe pas <a href="index.php" title="Mon site" class="alert-link">
-            Revenir à la recherche</a>
-            </div>';
-    }
-
 
     $nbPlace=$nbrAdults+$nbrEnfants;
     $route = " ".$depart."-".$arrivee;
@@ -218,6 +218,9 @@ function readFlights(){
     $res = $result->fetchAll();
     foreach ($res as $data){
         $nbr_Flight++;
+    }
+    if($nbr_Flight == 0){
+        header("Location: index.php?error=trajetvide");
     }
     $origincity="";
     $destinationcity="";
@@ -285,21 +288,21 @@ function CreateFormAdult($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom">
+                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom" required>
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom">
+                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom" required>
                     </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-md-6">
                             Adresse e-mail
-                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail">
+                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail" required>
                         </div>
                         <div class="form-group col-md-6">
                           Date de Naissance
-                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'">
+                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'" required>
                         </div>
                 </div>
             </div>
@@ -325,16 +328,16 @@ function CreateFormEnfant($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom">
+                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom" required>
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom">
+                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom" required>
                     </div>
                 </div>
                 <div class="form-group">
                       Date de Naissance
-                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'">
+                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'" required>
                 </div>
             </div>
         </div>
@@ -369,9 +372,20 @@ function travelTime($id){
     $result = $sth->fetch();
     $datetime1 = new DateTime($result[0]);
     $datetime2 = new DateTime($result[1]);
-    $interval = $datetime1->diff($datetime2);
-    return $interval->format(' %hh%i ');
+
+    $datetime1 = strval($datetime1->format('H:i:s'));
+    $datetime2 = strval($datetime2->format('H:i:s'));
+    $timestamp1 = date_create_from_format("H:i:s", $datetime1);
+    $timestamp2 = date_create_from_format("H:i:s", $datetime2);
+    if($timestamp2 < $timestamp1){
+        $interval = date_diff(date_add($timestamp2, DateInterval::createFromDateString("24 hours")), $timestamp1);
+    }
+    else {
+        $interval = date_diff($timestamp2, $timestamp1);
+    }
+    return $interval->format("%H:%I:%S");
 }
+
 
 function flightCapacity($id){
     global $db;
@@ -541,4 +555,121 @@ function getRemplissage($capacteRestance){
     } else {
         return 100;
     }
+}
+
+function deletePeople($id){
+    global $db;
+
+    $query = "DELETE FROM users WHERE id = ".$id;
+    $sth = $db->prepare($query);
+    $sth->execute();
+
+    header("location:affichageAdmin.php");
+}
+
+function affichageAdmin(){
+    global $db;
+
+    $query = "SELECT max(id) FROM users ";
+    $sth = $db->prepare($query);
+    $sth->execute();
+    $result = $sth->fetch();
+
+
+
+    for($i = 0; $i < $result[0] + 1; $i++){
+
+        $query2 = "SELECT adult FROM users WHERE id = ".$i;
+        $sth2 = $db->prepare($query2);
+        $sth2->execute();
+        $result2 = $sth2->fetch();
+
+        if($result2[0]  === 0){  //C'est un enfant;
+            adminDisplayEnfant($i);
+        } else if($result2[0] == 1) {   //Adult
+            adminDisplayAdult($i);
+        }
+
+    }
+}
+
+function adminDisplayAdult($id){
+    global  $db;
+
+    $q = "SELECT nom, prenom, mail, birth, idcommande, depense FROM users WHERE id = ".$id;
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $result = $sth->fetchAll();
+
+    echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$result[0][0].'&nbsp;'.$result[0][1].'
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        '.$result[0][2].'
+                    </div>
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$result[0][3].'        
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            <h5>Prix total dépensé : '.$result[0][5].'€</h5>
+             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            </div>
+        </div>
+    </div>
+ </div>
+ <br>';
+}
+
+
+function adminDisplayEnfant($id){
+    global  $db;
+
+    $q = "SELECT nom, prenom, birth, idcommande, depense FROM users WHERE id = ".$id;
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$result[0][0].'&nbsp;'.$result[0][1].'
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$result[0][2].'        
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            <h5>Prix total dépensé : '.$result[0][4].'€</h5>
+            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            </div>
+
+        </div>
+    </div>
+ </div>
+ <br>';
 }

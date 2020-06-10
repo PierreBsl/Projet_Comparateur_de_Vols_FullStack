@@ -26,8 +26,20 @@ echo '<!doctype html>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>
-        <br><br>
+        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>';
+if (isset($_GET["error"]))
+{
+    if ($_GET["error"]=="villedepart"){
+        echo '<div class="alert alert-danger" role="alert">La ville de d\'arriver n\'existe pas !</div>';
+    }
+    if ($_GET["error"]=="villearrivee"){
+        echo '<div class="alert alert-danger" role="alert">La ville d\'arriver n\'existe pas !</div>';
+    }
+    if ($_GET["error"]=="trajetvide"){
+        echo '<div class="alert alert-warning" role="alert">Aucun vol pour ce jour-ci</div>';
+    }
+}
+ echo '       <br><br>
         <div class="row">
             <div class="col col-md-8">
                 <div class="card">
