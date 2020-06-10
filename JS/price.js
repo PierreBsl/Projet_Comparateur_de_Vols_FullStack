@@ -11,6 +11,7 @@ function maxPrice() {
             tab=JSON.parse(tab);
             document.getElementById("range").max = tab['maxprice'];
             document.getElementById("range").min = tab['minprice'];
+            document.getElementById("range").value = tab['maxprice'];
             document.getElementById("textSlide").innerHTML = "Prix maximum: "+document.getElementById("range").value+" €";
 
         }
@@ -89,7 +90,6 @@ function launchSearch(){
     rangerVol(valeurSlide);
 
 }
-
 
 
 function main() {

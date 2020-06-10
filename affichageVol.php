@@ -42,7 +42,7 @@ echo '<!DOCTYPE html>
             <div class="card-body">
               <div class="form-group">
                 <h5>PRIX</h5><span class="text-muted"><small id="textSlide"></small></span>
-                <input id="range" style="margin-top: 3%" type="range" min="0" max="100" class="form-control-range" step="1" onchange="changeNumer">
+                <input id="range" style="margin-top: 3%" type="range" min="0" max="100" class="form-control-range" step="1" value="0" onchange="changeNumer">
                 <button id="searchButton"  style="margin-top: 4%;" type="button" class="btn btn-outline-white">Select</button>
               </div>
               </div>
