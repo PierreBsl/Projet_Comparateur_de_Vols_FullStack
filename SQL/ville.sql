@@ -1,12 +1,13 @@
-CREATE TABLE city (
+DROP TABLE ville;
+CREATE TABLE ville (
                        city VARCHAR(255) NOT NULL,
                        code VARCHAR (255) NOT NULL,
-                       longitude INTEGER NOT NULL,
-                       latitude INTEGER NOT NULL,
+                       longitude NUMERIC NOT NULL,
+                       latitude NUMERIC NOT NULL,
                        PRIMARY KEY (code)
 );
 
-INSERT INTO city (city, code, latitude, longitude) VALUES
+INSERT INTO ville (city, code, latitude, longitude) VALUES
 (' Gjoa Haven', ' YHK',  68.635597229,  -95.84970092770001),
 (' Ottawa', ' YOW',  45.3224983215332,  -75.66919708251953),
 (' Big Trout Lake', ' YTL',  53.81779861450195,  -89.89689636230469),

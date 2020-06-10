@@ -17,6 +17,12 @@ require([
     });
     var graphicsLayer = new GraphicsLayer();
     map.add(graphicsLayer);
+
+    var point = {
+        type: "point",
+        longitude: -118.80657463861,
+        latitude: 34.0005930608889
+    };
     var point = {
         type: "point",
         longitude: -118.80657463861,
@@ -41,7 +47,7 @@ require([
 
     var simpleLineSymbol = {
         type: "simple-line",
-        color: [226, 119, 40], // orange
+        color: [255, 69, 0], // orange
         width: 2
     };
 
@@ -49,8 +55,7 @@ require([
         type: "polyline",
         paths: [
             [-118.821527826096, 34.0139576938577],
-            [-118.814893761649, 34.0080602407843],
-            [-118.808878330345, 34.0016642996246]
+            [-119.814893761649, 32.0080602407843],
         ]
     };
 

@@ -270,6 +270,7 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
 
 function readFlights(){
     global  $db;
+
     $depart = $_SESSION['originAirport'];
     $arrivee = $_SESSION['destinationAirport'];
     $date = $_SESSION['departDate'];
@@ -347,6 +348,35 @@ function readFlights(){
         echo '</div>';
         echo '</div><br>';
     }
+}
+
+function flightCoordonate(){
+    global  $db;
+
+    $depart = $_SESSION['originAirport'];
+    $arrivee = $_SESSION['destinationAirport'];
+
+    $coordonate = [];
+
+    $query = "SELECT longitude, latitude FROM ville WHERE code = ' ".$depart."'";
+    $origin = $db->query($query);
+    foreach ($origin as $data) {
+        $longitude = $data['longitude'];
+        $latitude = $data['latitude'];
+        $coordonate[0][0]=$longitude;
+        $coordonate[0][1]=$latitude;
+    }
+    $query = "SELECT longitude, latitude FROM ville WHERE code = ' ".$arrivee."'";
+    $origin = $db->query($query);
+    foreach ($origin as $data) {
+        $longitude = $data['longitude'];
+        $latitude = $data['latitude'];
+        $coordonate[1][0]=$longitude;
+        $coordonate[1][1]=$latitude;
+    }
+
+    return $coordonate;
+
 }
 
 function CreateFormAdult($id){

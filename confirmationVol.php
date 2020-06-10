@@ -78,7 +78,9 @@ if ($_SESSION['active']==3){
 }else {
     echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Vos Passagers</h1>
-        <br><br>
+        <br><br>';
+    flightCoordonate();
+        echo '        
  <div class="row">
     <div class="col col-md-7">';
     echo '<form action="controller.php?func=createUser" method="post">';
