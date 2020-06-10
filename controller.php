@@ -259,21 +259,21 @@ function CreateFormAdult($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom">
+                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom" required>
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom">
+                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom" required>
                     </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-md-6">
                             Adresse e-mail
-                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail">
+                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail" required>
                         </div>
                         <div class="form-group col-md-6">
                           Date de Naissance
-                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'">
+                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'" required>
                         </div>
                 </div>
             </div>
@@ -299,16 +299,16 @@ function CreateFormEnfant($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom">
+                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom" required>
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom">
+                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom" required>
                     </div>
                 </div>
                 <div class="form-group">
                       Date de Naissance
-                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'">
+                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'" required>
                 </div>
             </div>
         </div>
