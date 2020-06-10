@@ -8,9 +8,11 @@ if (isset($_GET["func"]))
 {
     if ($_GET["func"]=="readFlights"){
         redirectFlights($_POST['originAirport'], $_POST['destinationAirport'], $_POST['departDate'], $_POST['nbrAdultes'], $_POST['nbrEnfants'], $_POST['volDirectCheck']);
+        $_SESSION['active'] = 1;
     }
     if ($_GET["func"]=="selectedFlight"){
         selectedFlight($_GET['id'], $_GET['price'], $_GET['capacity'], $_GET['travelTime']);
+        $_SESSION['active'] = 2;
     }
     if ($_GET["func"]=="createUser"){
         $numeroCommande = rand(1000,999999);
@@ -25,7 +27,7 @@ if (isset($_GET["func"]))
             $childrenPrice = $_SESSION['price']/2;
             createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], 0, $childrenPrice);
         }
-        $_SESSION['active'] = 1;
+        $_SESSION['active'] = 3;
         header( "Location:confirmationVol.php");
     }
 }
@@ -34,7 +36,7 @@ function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense]);
 
@@ -43,11 +45,12 @@ function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
     $stmt->execute();
 
 }
+
 function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
 
     global  $db;
 
-    $sql1 = "INSERT INTO users (id, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense]);
 
@@ -136,23 +139,23 @@ function displayFlight(){
     $daypropre = date("d/m/Y", $unixTimestamp);
 
     echo '<div class="card">';
-        echo '<h5 class="card-header"> Vol #' . $_SESSION['selectedVolId'] . '</h5>';
-        echo '<div class="card-body">';
-        echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
-            echo '<div class="row" >';
-                echo '<div class="col">';
-                    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
-                echo '</div>';
-                echo '<div class="col">';
-                    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
-                echo '</div>';
-                echo '<div class="col">';
-                    echo '<p class="card-text">Capacité Restante <br>';
-                    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
-                    echo '</p>';
-                echo '</div>';
-            echo '</div>';
-        echo '</div>';
+    echo '<h5 class="card-header"> Vol #' . $_SESSION['selectedVolId'] . '</h5>';
+    echo '<div class="card-body">';
+    echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $_SESSION['selectedVolDeparture'] . ' - ' . $_SESSION['selectedVolArrival'] . '</h5>';
+    echo '<div class="row" >';
+    echo '<div class="col">';
+    echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $_SESSION['origincity'] . ' ('.$_SESSION['originAirport']. ') à ' . $_SESSION['destinationcity'] . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
+    echo '</div>';
+    echo '<div class="col">';
+    echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>'.$_SESSION['travelTime'];
+    echo '</div>';
+    echo '<div class="col">';
+    echo '<p class="card-text">Capacité Restante <br>';
+    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+    echo '</p>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
     echo '</div><br>';
 }
 
@@ -176,6 +179,29 @@ function readFlights(){
     $nbrAdults = $_SESSION['nbrAdultes'];
     $nbrEnfants = $_SESSION['nbrEnfants'];
     $volDirect = $_SESSION['volDirectCheck'];
+
+    $query2 = "SELECT city FROM  ville WHERE code = ' ".$depart."'";
+    $result2 = $db->prepare($query2);
+    $result2->execute();
+    $res2 = $result2->fetchAll();
+
+    $query3 = "SELECT city FROM  ville WHERE code = ' ".$arrivee."'";
+    $result3 = $db->prepare($query3);
+    $result3->execute();
+    $res3 = $result3->fetchAll();
+
+    if(!isset($res2[0][0])){
+        echo '<div class="alert alert-danger" role="alert">
+            La ville de depart n\'existe pas <a href="index.php" title="Mon site" class="alert-link">
+            Revenir à la recherche</a>
+            </div>';
+    } if(!isset($res3[0][0])){
+        echo '<div class="alert alert-danger" role="alert">
+            La ville de d\'arrivée n\'existe pas <a href="index.php" title="Mon site" class="alert-link">
+            Revenir à la recherche</a>
+            </div>';
+    }
+
 
     $nbPlace=$nbrAdults+$nbrEnfants;
     $route = " ".$depart."-".$arrivee;
@@ -259,21 +285,21 @@ function CreateFormAdult($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom" required>
+                        <input type="text" class="form-control" name="nomAdult'.$id.'" placeholder="Nom">
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom" required>
+                      <input type="text" class="form-control" name="prenomAdult'.$id.'" placeholder="Prénom">
                     </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-md-6">
                             Adresse e-mail
-                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail" required>
+                            <input type="email" class="form-control" name="emailAdult'.$id.'" placeholder="Adresse e-mail">
                         </div>
                         <div class="form-group col-md-6">
                           Date de Naissance
-                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'" required>
+                          <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'">
                         </div>
                 </div>
             </div>
@@ -299,16 +325,16 @@ function CreateFormEnfant($id){
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         Nom
-                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom" required>
+                        <input type="text" class="form-control" name="nomEnfant'.$id.'" placeholder="Nom">
                     </div>
                     <div class="form-group col-md-6">
                       Prénom
-                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom" required>
+                      <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom">
                     </div>
                 </div>
                 <div class="form-group">
                       Date de Naissance
-                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'" required>
+                      <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'">
                 </div>
             </div>
         </div>
@@ -367,7 +393,7 @@ function isWeekEnd(){
 function displayCardByAdult(){
     global  $db;
 
-    $q = "SELECT nom, prenom, mail, birth FROM users WHERE id = ".$_SESSION['commande']." AND adult = 1";
+    $q = "SELECT nom, prenom, mail, birth FROM users WHERE idcommande = ".$_SESSION['commande']." AND adult = 1";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -415,7 +441,7 @@ function displayCardByAdult(){
 function displayCardByChildren(){
     global  $db;
 
-    $q = "SELECT nom, prenom, birth FROM users WHERE id = ".$_SESSION['commande']." AND adult = 0";
+    $q = "SELECT nom, prenom, birth FROM users WHERE idcommande = ".$_SESSION['commande']." AND adult = 0";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -450,8 +476,8 @@ function displayCardByChildren(){
                 </div>
             </div>
             <div class="card-footer">';
-            $pChildren = $_SESSION['price']/2;
-            echo '<h5>Prix du billet : '.$pChildren.'€</h5>
+        $pChildren = $_SESSION['price']/2;
+        echo '<h5>Prix du billet : '.$pChildren.'€</h5>
             </div>
         </div>
     </div>

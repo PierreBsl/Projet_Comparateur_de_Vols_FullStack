@@ -10,7 +10,6 @@ echo '<!doctype html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Air ISEN · Bootstrap</title>
-
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -24,7 +23,6 @@ echo '<!doctype html>
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
     </nav>
 </header>
-
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
@@ -58,7 +56,7 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    Adultes (> 4 Ans) <input type="number" placeholder="Nombre d\'adultes" class="form-control" name="nbrAdultes" min="0" max="10" required>
+                                    Adultes (> 4 Ans) <input type="number" placeholder="Nombre d\'adultes" class="form-control" name="nbrAdultes" min="1" max="10" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     Enfants ( 0-4 Ans) <input type="number" placeholder="Nombre d\'enfants" class="form-control" name="nbrEnfants" min="0" max="10" required>
@@ -86,7 +84,6 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
     <br>
 </main>
 </body>
-
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
         <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>

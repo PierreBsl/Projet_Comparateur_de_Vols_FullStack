@@ -1,5 +1,9 @@
 <?php
 include 'controller.php';
+if ($_SESSION['active'] != 1){
+    header("Location: index.php");
+}
+
 $depart = $_SESSION['originAirport'];
 $arrivee = $_SESSION['destinationAirport'];
 $date = $_SESSION['departDate'];
@@ -25,7 +29,6 @@ echo '<!DOCTYPE html>
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
     </nav>
 </header>
-
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">

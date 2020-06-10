@@ -1,5 +1,15 @@
 <?php
 include 'controller.php';
+if ($_SESSION['active'] != 2 && $_SESSION['active'] != 3){
+    if ($_SESSION['active'] == 0)
+    {
+        header("Location: index.php");
+    }
+    if ($_SESSION['active'] == 1){
+        header("Location: affichageVol.php");
+    }
+}
+
 $nbrAdults = $_SESSION['nbrAdultes'];
 $nbrEnfants = $_SESSION['nbrEnfants'];
 
@@ -21,7 +31,6 @@ echo '<!DOCTYPE html>
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
     </nav>
 </header>
-
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
@@ -29,7 +38,7 @@ echo '<!DOCTYPE html>
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-if ($_SESSION['active']==1){
+if ($_SESSION['active']==3){
     for ($i = 0; $i < $nbrAdults; $i++) {
         displayCardByAdult();
     }
