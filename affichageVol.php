@@ -36,7 +36,21 @@ echo '<!DOCTYPE html>
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-10">
         <h1 id="mainIntro" class="display-4 text-center">Vols Disponibles</h1>
-        <br><br>
+        <br>
+        <div class="container col-md-8">
+            <ol style="background-color:white" class="breadcrumb justify-content-between">
+                  <li ><a style="color: black" href="index.php"><i class="fa fa-search"></i>&nbsp;Recherche</a></li>
+                  <li class="active"><a style="color: orangered"><i class="fa fa-plane"></i>&nbsp;Vols Disponibles</a></li>
+                  <li class="disabled" style="color: darkgrey"><i class="fa fa-suitcase"></i>&nbsp;Passagers</li>
+                  <li class="disabled" style="color: darkgrey"><i class="fa fa-credit-card-alt"></i>&nbsp;Réservation</li>
+            </ol>
+        </div>
+        <br>
+          <ul class="pagination pagination-lg justify-content-center">
+            <li class="page-item"><button class="page-link">1</button></li>
+            <li class="page-item"><button class="page-link">2</button></li>
+            <li class="page-item"><button class="page-link">3</button></li>
+          </ul>
 <div class="row">
     <div class="container col">
             <div class="card">
@@ -53,11 +67,11 @@ echo '<!DOCTYPE html>
             <div class="card-body">
               <div class="form-group">
                 <h5>ORDRE DE TRI</h5>
-                <h6 id="actualOrder">Actuel : Croissant</h6>
+                <span class="text-muted"><small id="actualOrder">Actuel : Croissant</small></span>
                 <div class="row">
-                    <div class="col-mx-auto"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
-                    &nbsp;<div class="col-mx-auto"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Decroissant</button></div>
-                    </div>
+                    <div class="col-md-5"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
+                    &nbsp;<div class="col-md-5"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%;" type="button" class="btn btn-outline-white">Decroissant</button></div>
+                </div>
               </div>
               </div>
               </div>

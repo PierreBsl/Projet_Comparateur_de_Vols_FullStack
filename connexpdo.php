@@ -14,5 +14,4 @@ $password = 'new_password';
 $db = connexpdo($dsn, $user, $password);
 
 
-
 ?>

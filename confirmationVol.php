@@ -43,7 +43,16 @@ echo '<!DOCTYPE html>
 if ($_SESSION['active']==3){
     echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Votre Réservation</h1>
-        <br><br>
+        <br>
+        <div class="container col-md-8">
+            <ol style="background-color:white" class="breadcrumb justify-content-between">
+                  <li ><a style="color: black" href="index.php"><i class="fa fa-search"></i>&nbsp;Recherche</a></li>
+                  <li class="disabled" style="color: darkgrey"><i class="fa fa-plane"></i>&nbsp;Vol Aller</li>
+                  <li class="disabled" style="color: darkgrey"><i class="fa fa-suitcase"></i>&nbsp;Passagers</li>
+                  <li class="active" style="color: darkgrey"><a style="color: orangered" href=""><i class="fa fa-credit-card-alt"></i>&nbsp;Réservation</a></li>
+            </ol>
+        </div>
+        <br>
  <div class="row">
     <div class="col col-md-7">';
     displayCardByAdult();
@@ -59,7 +68,16 @@ if ($_SESSION['active']==3){
 }else {
     echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Vos Passagers</h1>
-        <br><br>      
+        <br>
+            <div class="container col-md-8">
+            <ol style="background-color:white" class="breadcrumb justify-content-between">
+                  <li ><a style="color: black" href="index.php"><i class="fa fa-search"></i>&nbsp;Recherche</a></li>
+                  <li ><a style="color: black" href="affichageVol.php"><i class="fa fa-plane"></i>&nbsp;Vols Disponibles</a></li>
+                  <li class="active" ><a style="color: orangered"><i class="fa fa-suitcase"></i>&nbsp;Passagers</a></li>
+                  <li class="disabled" style="color: darkgrey"><i class="fa fa-credit-card-alt"></i>&nbsp;Réservation</li>
+            </ol>
+        </div>
+        <br>      
  <div class="row">
     <div class="col col-md-7">';
     echo '<form action="controller.php?func=createUser" method="post">';

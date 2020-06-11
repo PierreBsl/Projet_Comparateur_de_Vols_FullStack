@@ -19,6 +19,7 @@ echo '<!doctype html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles for this template -->
     <link href="CSS/style.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="airplane-flight-around-the-planet.png" />
 </head>
 <body class="d-flex flex-column h-100">
 <div id="loading">
@@ -33,7 +34,9 @@ echo '<!doctype html>
 <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
-        <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+        <a id="mainTitle" class="navbar-brand" href="index.php" title="Accueil">
+        <img src="airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
+        &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
             <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
@@ -43,7 +46,8 @@ echo '<!doctype html>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>';
+        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>
+        ';
 if (isset($_GET["error"]))
 {
     if ($_GET["error"]=="villedepart"){

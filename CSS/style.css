@@ -1,6 +1,16 @@
 main > .container {
     padding: 60px 15px 0;
 }
+
+#trait::after {
+    content:'';
+    position:absolute;
+    right:calc(-50% - 5px);
+    top:calc(50% - 3px);
+    border-bottom:5px ridge grey;
+    width:50%;
+}
+
 .btn-white, .btn-white:hover, .btn-white:active, .btn-white:visited
 {
     color: white;
