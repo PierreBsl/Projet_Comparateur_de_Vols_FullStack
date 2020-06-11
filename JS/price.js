@@ -34,9 +34,9 @@ function rangerVol(prix, order) {
             document.getElementById("allCard").innerHTML = "";
             if (order === 0)
             {
-                document.getElementById("actualOrder").innerHTML = "Actuelle : Decroissant";
+                document.getElementById("actualOrder").innerHTML = "Actuel : Decroissant";
             }else {
-                document.getElementById("actualOrder").innerHTML = "Actuelle : Croissant";
+                document.getElementById("actualOrder").innerHTML = "Actuel : Croissant";
             }
             let compteur = 0;
             let nbr_Flight=result.length;

@@ -53,7 +53,7 @@ echo '<!DOCTYPE html>
             <div class="card-body">
               <div class="form-group">
                 <h5>ORDRE DE TRI</h5>
-                <h6 id="actualOrder">Actuelle : Croissant</h6>
+                <h6 id="actualOrder">Actuel : Croissant</h6>
                 <div class="row">
                     <div class="col-mx-auto"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
                     &nbsp;<div class="col-mx-auto"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Decroissant</button></div>

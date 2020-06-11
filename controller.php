@@ -47,6 +47,7 @@ if (isset($_GET["func"]))
     }
     if ($_GET["func"]=="deleteReservation"){
         deleteReservation();
+        header( "Location:index.php?error=cancelled");
     }
 
 }
@@ -58,7 +59,7 @@ function deleteReservation(){
     $sth = $db->prepare($query);
     $sth->execute();
 
-    header( "Location:index.php?error=cancelled");
+
 }
 
 function confirmAdult(){
@@ -82,7 +83,7 @@ function confirmAdult(){
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nomA, $prenomA, $mailA, $birthDateA, $isAdultA, $depenseA, $_SESSION['selectedVolId']]);
 
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."' AND week='".$_SESSION['week']."'";
     $stmt = $db->prepare($sql);
     $stmt->execute();
 
@@ -108,7 +109,7 @@ function confirmChildren(){
     $sqlR1 = $db->prepare($sql1);
     $sqlR1->execute([$_SESSION['commande'], $nomC, $prenomC, '', $birthDateC, $isAdultC, $depenseC, $_SESSION['selectedVolId']]);
 
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."' AND week='".$_SESSION['week']."'";
     $stmt = $db->prepare($sql);
     $stmt->execute();
 
@@ -152,7 +153,7 @@ function ConnectUser($mail, $birth) {
 function selectedFlight($idVol, $price, $capacity, $travelTime){
     global  $db;
 
-    $query1 = "SELECT route, distancekm, departuretime, arrivaltime FROM flights WHERE id ='".$idVol."'";
+    $query1 = "SELECT route, distancekm, departuretime, arrivaltime FROM flights WHERE id ='".$idVol."' AND week='".$_SESSION['week']."'";
     $sth = $db->prepare($query1);
     $sth->execute();
     $result=$sth->fetchAll();
@@ -162,7 +163,7 @@ function selectedFlight($idVol, $price, $capacity, $travelTime){
     $_SESSION['selectedVolArrival'] = $result[0]['arrivaltime'];
     $_SESSION['selectedVolDate'] = $_SESSION['departDate'];
     $_SESSION['price'] = $price;
-    $_SESSION['$capacity'] = $capacity;
+    $_SESSION['capacity'] = $capacity;
     $_SESSION['travelTime'] = $travelTime;
 
     header("Location: confirmationVol.php");
@@ -186,7 +187,7 @@ function displayCommande(){
     echo '</div>';
     echo '<div class="col">';
     echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
-    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['capacity'].' %</div>';
     echo '</p>';
     echo '</div>';
     echo '</div>';
@@ -229,7 +230,7 @@ function displayFlight(){
     echo '</div>';
     echo '<div class="col">';
     echo '<p class="card-text">Capacité Restante <br>';
-    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['$capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['$capacity'].' %</div>';
+    echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$_SESSION['capacity'].'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.$_SESSION['capacity'].' %</div>';
     echo '</p>';
     echo '</div>';
     echo '</div>';
@@ -384,7 +385,7 @@ function travelTime($id){
 
 function flightCapacity($id){
     global $db;
-    $query = "SELECT flightsize, flightcapacity FROM flights WHERE id ='".$id."'";
+    $query = "SELECT flightsize, flightcapacity FROM flights WHERE id ='".$id."' AND week='".$_SESSION['week']."'";
     $sth = $db->prepare($query);
     $sth->execute();
     $result = $sth->fetch();
@@ -497,7 +498,7 @@ function displayCardByChildren(){
 
 function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     global $db;
-    $query1 = "SELECT originairport, destinationairport, route FROM flights WHERE id = '".$id."'";
+    $query1 = "SELECT originairport, destinationairport, route FROM flights WHERE id = '".$id."' AND week = '".$_SESSION['week']."'";
     $sth1 = $db->prepare($query1);
     $sth1->execute();
     $result1=$sth1->fetchAll();
