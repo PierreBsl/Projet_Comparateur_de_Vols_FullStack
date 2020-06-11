@@ -154,10 +154,10 @@ function ConnectUser($mail, $birth) {
 function deletePeopleUser($id){
     global $db;
 
-    $query1 = "SELECT idReservation FROM users WHERE id = ".$id;
+    $query1 = "SELECT idcommande FROM users WHERE id = ".$id;
     $sth1 = $db->prepare($query1);
     $sth1->execute();
-    $sth1->fetch();
+    $result1 = $sth1->fetch();
 
     $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
     $stmt = $db->prepare($sql);
@@ -166,6 +166,22 @@ function deletePeopleUser($id){
     $query = "DELETE FROM users WHERE id = ".$id;
     $sth = $db->prepare($query);
     $sth->execute();
+
+    $query2 = "SELECT id FROM users WHERE idcommande = ".$result1[0]."AND adult = 1";
+    $sth2 = $db->prepare($query2);
+    $sth2->execute();
+    $result = $sth2->fetchall();
+
+    if(empty($result[0])){
+
+        $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $query3 = "DELETE FROM users WHERE idcommande =".$result1[0];
+        $sth3 = $db->prepare($query3);
+        $sth3->execute();
+    }
 
     header("location:userView.php");
 }
@@ -397,14 +413,15 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
     $result3->execute();
     $res3 = $result3->fetchAll();
 
-    if(!isset($res2[0][0])){
+    if($nbrEnfants + $nbrAdults > 10){
+        header("location: index.php?error=troppassager");
+    } else if(!isset($res2[0][0])){
         header("Location: index.php?error=villedepart");
     }else if(!isset($res3[0][0])){
         header("Location: index.php?error=villearrivee");
-    }else{
+    }else {
         header("Location: affichageVol.php");
     }
-
 
 
     $_SESSION['originAirport']=$depart;
@@ -415,7 +432,6 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
     $_SESSION['volDirectCheck']=$volDirect;
 
 }
-
 function CreateFormAdult($id){
     $_SESSION['nbBagage']=0;
 

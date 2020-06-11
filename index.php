@@ -69,6 +69,9 @@ if (isset($_GET["error"]))
     if ($_GET["error"]=="noaccount"){
         echo '<div class="alert alert-warning" role="alert">Vous n avez pas de billet à votre nom !</div>';
     }
+    if ($_GET["error"] == "troppassager"){
+        echo '<div class="alert alert-warning" role="alert">Limité à 9 reservations !</div>';
+    }
 
 }
 
