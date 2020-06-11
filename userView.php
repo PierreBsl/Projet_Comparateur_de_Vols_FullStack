@@ -33,43 +33,15 @@ echo '<!doctype html>
         </div>
     </nav>
 </header>
-<img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
-    <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Connectez-Vous</h1>
-        <br><br>
-        <div class="row">
-            <div class="col col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <form action="controller.php?func=connectUser" method="POST">
-                            <div class="form-group col-md-6">
-                                 Email
-                                 <input type="text" class="form-control" name="userMail" autocomplete="off" placeholder="Votre adresse mail" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                 Date de Naissance
-                                 <input type="date" class="form-control" max="'.$today.'" name="birthDate" required>
-                            </div><br>
-                            <button style="margin-left:2%; width: 25%" type="submit" class="btn btn-outline-white">Connexion</button>                        
-                        </form>
-                    </div>
-                </div>
-            </div>';
-            echo '
-            <div style="border-left:1px solid darkgrey;height:352px"></div>
-            <div class="col">
-                <div class="card" style="height: 352px">
-                <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
-                </div>
-            </div>
+    <div class="container col-md-9">';
+creationUserView();
+echo '
         </div>
      <br>
 </form>
     </div>
-    <br>
-    <br>
     <br>
 </main>
 </body>

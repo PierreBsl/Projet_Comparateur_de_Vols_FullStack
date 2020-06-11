@@ -19,7 +19,7 @@ echo '<!doctype html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles for this template -->
     <link href="CSS/style.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="airplane-flight-around-the-planet.png" />
+    <link rel="icon" type="image/png" href="IMG/airplane-flight-around-the-planet.png" />
 </head>
 <body class="d-flex flex-column h-100">
 <div id="loading">
@@ -33,9 +33,9 @@ echo '<!doctype html>
 </div>
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
+   <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php" title="Accueil">
-        <img src="airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
+        <img src="IMG/airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
         &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
@@ -43,11 +43,12 @@ echo '<!doctype html>
         </div>
     </nav>
 </header>
+<img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">
+
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>
-        ';
+        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>';
 if (isset($_GET["error"]))
 {
     if ($_GET["error"]=="villedepart"){
@@ -64,6 +65,9 @@ if (isset($_GET["error"]))
     }
     if ($_GET["error"]=="cancelled"){
         echo '<div class="alert alert-success" role="alert">Votre Réservation à bien été annulée</div>';
+    }
+    if ($_GET["error"]=="noaccount"){
+        echo '<div class="alert alert-warning" role="alert">Vous n avez pas de billet à votre nom !</div>';
     }
 
 }
@@ -123,7 +127,8 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
 </form>
     </div>
     <br>
-    
+    <br>
+    <br>
 </main>
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">

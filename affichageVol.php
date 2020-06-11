@@ -1,6 +1,6 @@
 <?php
 include 'controller.php';
-if ($_SESSION['active'] != 1){
+if ($_SESSION['active'] != 1 && $_SESSION['active']!=2){
     header("Location: index.php");
 }
 
@@ -24,14 +24,21 @@ echo '<!DOCTYPE html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link href="CSS/style.css" rel="stylesheet">
-  
+    <link rel="icon" type="image/png" href="IMG/airplane-flight-around-the-planet.png" />
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm">
-        <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
+        <a id="mainTitle" class="navbar-brand" href="index.php" title="Accueil">
+        <img src="IMG/airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
+        &nbsp;Air ISEN Search</a>        
+        <div style="float: right">
+            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
+            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+        </div>
     </nav>
 </header>
+<img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-10">
@@ -46,10 +53,10 @@ echo '<!DOCTYPE html>
             </ol>
         </div>
         <br>
-          <ul class="pagination pagination-lg justify-content-center">
-            <li class="page-item"><button class="page-link">1</button></li>
-            <li class="page-item"><button class="page-link">2</button></li>
-            <li class="page-item"><button class="page-link">3</button></li>
+         <ul class="pagination pagination-lg justify-content-center">
+            <li class="page-item"><button id="jourPre" class="page-link">Previous</button></li>
+            <li class="page-item"><button id="jourActu" class="page-link">020-20-20</button></li>
+            <li class="page-item"><button id="jourNext" class="page-link">Next</button></li>
           </ul>
 <div class="row">
     <div class="container col">
@@ -69,9 +76,9 @@ echo '<!DOCTYPE html>
                 <h5>ORDRE DE TRI</h5>
                 <span class="text-muted"><small id="actualOrder">Actuel : Croissant</small></span>
                 <div class="row">
-                    <div class="col-md-5"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
-                    &nbsp;<div class="col-md-5"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%;" type="button" class="btn btn-outline-white">Decroissant</button></div>
-                </div>
+                    <div class="col-mx-auto"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
+                    &nbsp;<div class="col-mx-auto"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Decroissant</button></div>
+                    </div>
               </div>
               </div>
               </div>
@@ -96,6 +103,9 @@ echo '<!DOCTYPE html>
     </div>
     <div class="container col-md-1">
     </div>
+     <br>
+      <br>
+       <br>
 </main>
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">

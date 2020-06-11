@@ -27,24 +27,28 @@ echo '<!DOCTYPE html>
     <!-- Custom Stylsheet for Maps API -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.15/"></script>
+    <link rel="icon" type="image/png" href="IMG/airplane-flight-around-the-planet.png" />
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
-        <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
+        <a id="mainTitle" class="navbar-brand" href="index.php" title="Accueil">
+        <img src="IMG/airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
+        &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
             <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
         </div>
     </nav>
 </header>
+<img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">';
 if ($_SESSION['active']==3){
     echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Votre Réservation</h1>
         <br>
-        <div class="container col-md-8">
+            <div class="container col-md-8">
             <ol style="background-color:white" class="breadcrumb justify-content-between">
                   <li ><a style="color: black" href="index.php"><i class="fa fa-search"></i>&nbsp;Recherche</a></li>
                   <li class="disabled" style="color: darkgrey"><i class="fa fa-plane"></i>&nbsp;Vol Aller</li>
@@ -63,7 +67,7 @@ if ($_SESSION['active']==3){
     <div class="col">';
 
     displayCommande();
-
+    echo '<br><iframe style="width: 100%; height: 100%;" src="maps.php"></iframe><div style="height: 70px"></div></div>';
     echo '</div>';
 }else {
     echo '<div class="container col-md-9">

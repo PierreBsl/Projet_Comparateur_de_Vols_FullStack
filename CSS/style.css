@@ -1,16 +1,6 @@
 main > .container {
     padding: 60px 15px 0;
 }
-
-#trait::after {
-    content:'';
-    position:absolute;
-    right:calc(-50% - 5px);
-    top:calc(50% - 3px);
-    border-bottom:5px ridge grey;
-    width:50%;
-}
-
 .btn-white, .btn-white:hover, .btn-white:active, .btn-white:visited
 {
     color: white;
@@ -45,7 +35,7 @@ code {
 }
 #mainIntro
 {
-    padding-top: 80px;
+    /*padding-top: 80px;*/
 }
 #volDirectCheck
 {
@@ -80,4 +70,9 @@ input[type="date"]:valid:before {
     width: 100%;
     text-align: center;
     margin-top: 30px;
+}
+
+.page-link{
+    color: orangered;
+    background-color: white;
 }

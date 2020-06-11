@@ -3,9 +3,27 @@ require_once 'connexpdo.php';
 require_once "controller.php";
 
 global  $db;
+$q = $_REQUEST["q"];
 $depart = $_SESSION['originAirport'];
 $arrivee = $_SESSION['destinationAirport'];
 $date = $_SESSION['departDate'];
+$tmp=$date;
+
+$date0 = new DateTime($date);
+$date0->add(new DateInterval('P1D'));
+$date5= $date0->format('Y-m-d');
+
+$date2 = new DateTime($date);
+$date2->sub(new DateInterval('P1D'));
+$date6= $date2->format('Y-m-d');
+
+if($q == "+1"){
+    $date=$date5;
+}
+if($q == "-1"){
+    $date=$date6;
+}
+
 $nbrAdults = $_SESSION['nbrAdultes'];
 $nbrEnfants = $_SESSION['nbrEnfants'];
 $volDirect = $_SESSION['volDirectCheck'];
@@ -88,6 +106,11 @@ for ($k = 0; $k < $nbr_Flight; $k++) {
     $tab[$k]['daypropre'] = $daypropre;
     $tab[$k]['week'] = $week;
 }
+
+$tab[0]['date'] = $tmp;
+$tab[0]['date1'] = $date5;
+$tab[0]['date2'] = $date6;
+
 
 
 

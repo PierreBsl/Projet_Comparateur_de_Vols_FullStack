@@ -24,30 +24,32 @@ if (isset($_GET["func"]))
 
         for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
             $k =$i+1;
-            createAdult($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], 1, $_SESSION['price']);
+            createAdult($_POST['nomAdult'.$k], $_POST['prenomAdult'.$k], $_POST['emailAdult'.$k], $_POST['birthAdult'.$k], 1, $_POST['bagage'.$k],$_SESSION['price']);
         }
         for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
             $k =$i+1;
             $childrenPrice = $_SESSION['price']/2;
-            createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], 0, $childrenPrice);
+            createChildren($_POST['nomEnfant'.$k], $_POST['prenomEnfant'.$k], $_POST['birthEnfant'.$k], 0, $_POST['bagageEnfant'.$k], $childrenPrice);
         }
         $_SESSION['active'] = 3;
         header( "Location:confirmationVol.php");
     }
     if ($_GET["func"]=="confirmUser"){
-
-        for ($i=0; $i<$_SESSION['nbrAdultes']; $i++){
-            confirmAdult();
-        }
-        for ($i=0; $i<$_SESSION['nbrEnfants']; $i++){
-            confirmChildren();
-        }
+        confirmAdult();
+        confirmChildren();
         deleteReservation();
         header( "Location:index.php?error=confirm");
     }
     if ($_GET["func"]=="deleteReservation"){
         deleteReservation();
         header( "Location:index.php?error=cancelled");
+    }
+
+    if($_GET["func"]=="connectUser"){
+        ConnectUser($_POST['userMail'], $_POST['birthDate']);
+    }
+    if($_GET["func"] =="deletePeopleUser"){
+        deletePeopleUser($_GET['id']);
     }
 
 }
@@ -58,97 +60,243 @@ function deleteReservation(){
     $query = "DELETE FROM commande ";
     $sth = $db->prepare($query);
     $sth->execute();
-
-
 }
 
 function confirmAdult(){
 
     global  $db;
 
-    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 1";
+    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation, bagage FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 1";
     $result = $db->prepare($query);
     $result->execute();
     $res = $result->fetchAll();
-    foreach ($res as $data){
-        $nomA = $data['nom'];
-        $prenomA = $data['prenom'];
-        $mailA = $data['mail'];
-        $birthDateA = $data['birth'];
-        $isAdultA = $data['adult'];
-        $depenseA = $data['depense'];
+    for($k = 0; $k<$_SESSION['nbrAdultes']; $k++){
+        $nomA = $res[$k]['nom'];
+        $prenomA = $res[$k]['prenom'];
+        $mailA = $res[$k]['mail'];
+        $birthDateA = $res[$k]['birth'];
+        $isAdultA = $res[$k]['adult'];
+        $depenseA = $res[$k]['depense'];
+        $bagageA = $res[$k]['bagage'];
+
+        $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation, bagage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sqlR1 = $db->prepare($sql1);
+        $sqlR1->execute([$_SESSION['commande'], $nomA, $prenomA, $mailA, $birthDateA, $isAdultA, $depenseA, $_SESSION['selectedVolId'], $bagageA]);
+
+        $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
     }
-
-    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nomA, $prenomA, $mailA, $birthDateA, $isAdultA, $depenseA, $_SESSION['selectedVolId']]);
-
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."' AND week='".$_SESSION['week']."'";
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
 }
 
 function confirmChildren(){
 
     global  $db;
 
-    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 0";
+    $query = "SELECT nom, prenom, mail, birth, adult, depense, idreservation, bagage FROM commande WHERE idcommande ='".$_SESSION['commande']."' AND adult = 0";
     $result = $db->prepare($query);
     $result->execute();
     $res = $result->fetchAll();
-    foreach ($res as $data){
-        $nomC = $data['nom'];
-        $prenomC = $data['prenom'];
-        $birthDateC = $data['birth'];
-        $isAdultC = $data['adult'];
-        $depenseC = $data['depense'];
+    for($k = 0; $k<$_SESSION['nbrEnfants']; $k++){
+        $nomC = $res[$k]['nom'];
+        $prenomC = $res[$k]['prenom'];
+        $birthDateC = $res[$k]['birth'];
+        $isAdultC = $res[$k]['adult'];
+        $depenseC = $res[$k]['depense'];
+        $bagageC = $res[$k]['bagage'];
+
+
+        $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation, bagage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sqlR1 = $db->prepare($sql1);
+        $sqlR1->execute([$_SESSION['commande'], $nomC, $prenomC, '', $birthDateC, $isAdultC, $depenseC, $_SESSION['selectedVolId'], $bagageC]);
+
+        $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
     }
-
-    $sql1 = "INSERT INTO users (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nomC, $prenomC, '', $birthDateC, $isAdultC, $depenseC, $_SESSION['selectedVolId']]);
-
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."' AND week='".$_SESSION['week']."'";
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-
 }
 
-function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $depense){
-
+function createAdult($nom, $prenom, $mail, $birthDate, $isAdult, $bagage ,$depense){
     global  $db;
-
-    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idReservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $_SESSION['nbBagage'] = $_SESSION['nbBagage'] + $bagage;
+    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idReservation, bagage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense, $_SESSION['selectedVolId']]);
-
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, $mail, $birthDate, $isAdult, $depense, $_SESSION['selectedVolId'], $bagage]);
 }
 
-function createChildren($nom, $prenom, $birthDate, $isAdult, $depense){
+function createChildren($nom, $prenom, $birthDate, $isAdult, $bagage ,$depense){
 
     global  $db;
-
-    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idreservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $_SESSION['nbBagage'] = $_SESSION['nbBagage'] + $bagage;
+    $sql1 = "INSERT INTO commande (idcommande, nom, prenom, mail, birth, adult, depense, idreservation, bagage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $sqlR1 = $db->prepare($sql1);
-    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense, $_SESSION['selectedVolId']]);
-
+    $sqlR1->execute([$_SESSION['commande'], $nom, $prenom, '', $birthDate, $isAdult, $depense, $_SESSION['selectedVolId'], $bagage]);
 }
 
 function ConnectUser($mail, $birth) {
     global  $db;
-
-    $q = "SELECT id FROM users WHERE mail = '".$mail."' AND  birth = '".$birth."'";
+    $q = "SELECT id FROM users WHERE mail ='".$mail."' AND  birth ='".$birth."'";
     $sth = $db->prepare($q);
     $sth->execute();
-    $r = $sth->fetch();
+    $r = $sth->fetchall();
+
+    $_SESSION["mailUser"] = $mail;
+    $_SESSION["birthUser"] = $birth;
 
     if ($r[0]) {
-        $_SESSION["userId"] = $r[0];
+        $_SESSION["userId"] = $r;
+        header("Location:userView.php");
     } else {
-        header("Location:index.php");
+        header("Location:index.php?error=noaccount");   //TODO Ajoueter gestion erreur
     }
 }
+
+function deletePeopleUser($id){
+    global $db;
+
+    $query1 = "SELECT idReservation FROM users WHERE id = ".$id;
+    $sth1 = $db->prepare($query1);
+    $sth1->execute();
+    $sth1->fetch();
+
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+
+    $query = "DELETE FROM users WHERE id = ".$id;
+    $sth = $db->prepare($query);
+    $sth->execute();
+
+    header("location:userView.php");
+}
+
+function userDisplayEnfant($id){
+    global  $db;
+
+    $q = "SELECT nom, prenom, birth, idcommande, depense, idReservation, bagage FROM users WHERE id = ".$id;
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant - Vol n° : '.$result[0][5].'</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$result[0][0].'&nbsp;'.$result[0][1].'
+                    </div>
+                      <div class ="form-group col-md-6">
+                        <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                        '.$result[0][6].'
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$result[0][2].'        
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            <h5>Prix total dépensé : '.$result[0][4].'€</h5>
+            <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            </div>
+
+        </div>
+    </div>
+ </div>
+ <br>';
+}
+
+
+function userDisplayAdult($id){
+    global  $db;
+
+    $q = "SELECT nom, prenom, mail, birth, idcommande, depense, idReservation, bagage FROM users WHERE id = ".$id;
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $result = $sth->fetchAll();
+
+    echo '
+ <div class="row">
+    <div class="col col-mx-auto">
+        <div class="card">
+            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <i class="fa fa-user-o" aria-hidden="true"></i>
+                        '.$result[0][0].'&nbsp;'.$result[0][1].'
+                    </div>
+                      <div class ="form-group col-md-6">
+                        <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                        '.$result[0][7].'
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        '.$result[0][2].'
+                    </div>
+                    <div class="form-group col-md-6">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        '.$result[0][3].'        
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            <h5>Prix total dépensé : '.$result[0][5].'€</h5>
+             <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            </div>
+        </div>
+    </div>
+ </div>
+ <br>';
+}
+
+function creationUserView(){
+    global $db;
+    $id = $_SESSION["userId"];
+
+    $tempTab = [];
+
+    $q = "SELECT id FROM users WHERE mail ='".$_SESSION["mailUser"]."' AND  birth ='".$_SESSION["birthUser"]."'";
+    $sth = $db->prepare($q);
+    $sth->execute();
+    $r = $sth->fetchall();
+
+    $id = $r;
+
+    if(sizeof($id) == 0){
+        echo '<div class="alert alert-warning" role="alert">
+            Vous avez supprimer tous les vols <a href="index.php" class="alert-link">Revenir à l\'index</a>
+            </div>';
+    }
+
+    for($i = 0; $i < sizeof($id); $i++){
+        userDisplayAdult($id[$i][0]);
+        $q = "SELECT idcommande FROM users WHERE id =".$id[$i][0];
+        $sth = $db->prepare($q);
+        $sth->execute();
+        $r = $sth->fetchall();
+
+        $q2 = "SELECT id FROM users WHERE idcommande =".$r[0][0]."AND adult =0";
+        $sth2 = $db->prepare($q2);
+        $sth2->execute();
+        $r2 = $sth2->fetchall();
+
+        for ($j = 0; $j < sizeof($r2); $j++) {
+            if(!in_array($r2[$j][0], $tempTab)) {
+                $tempTab[sizeof($tempTab)] = $r2[$j][0];
+                userDisplayEnfant($r2[$j][0]);
+            }
+        }
+    }
+}
+
 
 function selectedFlight($idVol, $price, $capacity, $travelTime){
     global  $db;
@@ -169,7 +317,6 @@ function selectedFlight($idVol, $price, $capacity, $travelTime){
     header("Location: confirmationVol.php");
 
 }
-
 function displayCommande(){
     $unixTimestamp = strtotime($_SESSION['selectedVolDate']);
     $daypropre = date("d/m/Y", $unixTimestamp);
@@ -199,18 +346,18 @@ function displayCommande(){
     echo '<p class="card-text">- ' . $_SESSION['nbrAdultes'] . ' x Adulte(s) &nbsp; : &nbsp; ' . $_SESSION['price'] . '€</p>';
     $enfantPrice = $_SESSION['price'] / 2;
     echo '<p class="card-text">- ' . $_SESSION['nbrEnfants'] . ' x Enfant(s) &nbsp; : &nbsp; ' . $enfantPrice . '€';
+    echo '<p class="card-text">- ' . $_SESSION['nbBagage'] . ' x Bagage(s) &nbsp; : &nbsp; Gratuit';
     echo '</div>';
     echo '<div class="col">';
-    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Prix Total ' . getTotPrice() . '€</h5>';
+    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Prix total ' . getTotPrice() . '€</h5>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
     echo '</div><br>';
     echo '<form method="POST" action="controller.php?func=confirmUser"><button style="width: 100%" type="submit" class="btn btn-white">Valider la commande</button></form><br>';
     echo '<form method="POST" action="controller.php?func=deleteReservation"><button style="width: 100%" type="submit" class="btn btn-white">Annuler la commande</button></form>';
-
-
 }
+
 
 function displayFlight(){
 
@@ -270,6 +417,8 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
 }
 
 function CreateFormAdult($id){
+    $_SESSION['nbBagage']=0;
+
     $year = date("Y");
     $year1 = $year-4;
     $year2 = $year - 130;
@@ -302,6 +451,13 @@ function CreateFormAdult($id){
                           <input type="date" class="form-control" min="'.$actualDate.'" max="'.$date.'" name="birthAdult'.$id.'" required>
                         </div>
                 </div>
+                <div class="form-row">
+                    <div class = "form-group col-md-6">
+                        Nombre de bagage en soute : 
+                        <input type="number" placeholder="bagage" class="form-control" name="bagage'.$id.'" min="0" max="30" required>
+                      
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -332,14 +488,20 @@ function CreateFormEnfant($id){
                       <input type="text" class="form-control" name="prenomEnfant'.$id.'" placeholder="Prénom" required>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
                       Date de Naissance
                       <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'" required>
+                     </div>
+                      <div class = "form-group col-md-6">
+                        Nombre de bagage en soute : 
+                        <input type="number" placeholder="bagage" class="form-control" name="bagageEnfant'.$id.'" min="0" max="30" required>
+                    </div>    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
- </div>
  <br>
  ';
 }
@@ -399,15 +561,16 @@ function isWeekEnd(){
     }
     else return 0;
 }
-
 function displayCardByAdult(){
     global  $db;
 
-    $q = "SELECT nom, prenom, mail, birth FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 1";
+    $q = "SELECT nom, prenom, mail, birth, bagage FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 1";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
     $nAdultes=0;
+
+
 
     for ($k = 0; $k < $_SESSION['nbrAdultes']; $k++) {
         $nAdultes = $nAdultes +1;
@@ -424,8 +587,11 @@ function displayCardByAdult(){
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         '.$result[$k]['nom'].'&nbsp;'.$result[$k]['prenom'].'
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class ="form-group col-md-6">
+                        <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                        '.$result[$k]['bagage'].'
                     </div>
+                    
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -447,11 +613,10 @@ function displayCardByAdult(){
  <br>';
     }
 }
-
 function displayCardByChildren(){
     global  $db;
 
-    $q = "SELECT nom, prenom, birth FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 0";
+    $q = "SELECT nom, prenom, birth, bagage FROM commande WHERE idcommande = ".$_SESSION['commande']." AND adult = 0";
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
@@ -471,6 +636,10 @@ function displayCardByChildren(){
                     <div class="form-group col-md-6">
                         <i class="fa fa-user-o" aria-hidden="true"></i>
                         '.$result[$k]['nom'].'&nbsp&nbsp;'.$result[$k]['prenom'].' 
+                    </div>
+                    <div class ="form-group col-md-6">
+                        <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                        '.$result[$k]['bagage'].'
                     </div>
                     <div class="form-group col-md-6">
                     </div>
@@ -602,78 +771,84 @@ function affichageAdmin(){
 function adminDisplayAdult($id){
     global  $db;
 
-    $q = "SELECT nom, prenom, mail, birth, idcommande, depense, idReservation FROM users WHERE id = ".$id;
+    $q = "SELECT nom, prenom, mail, birth, idcommande, depense, idReservation, bagage FROM users WHERE id = ".$id;
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
 
     echo '
  <div class="row">
-    <div class="col col-mx-auto">
-        <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adulte - Vol n° : '.$result[0][6].'</div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <i class="fa fa-user-o" aria-hidden="true"></i>
-                        '.$result[0][0].'&nbsp;'.$result[0][1].'
-                    </div>
-                    <div class="form-group col-md-6">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        '.$result[0][2].'
-                    </div>
-                    <div class="form-group col-md-6">
-                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                        '.$result[0][3].'        
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-            <h5>Prix total dépensé : '.$result[0][5].'€</h5>
-             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
-            </div>
-        </div>
-    </div>
- </div>
+   <div class="col col-mx-auto">
+       <div class="card">
+           <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
+           <div class="card-body">
+               <div class="form-row">
+                   <div class="form-group col-md-6">
+                       <i class="fa fa-user-o" aria-hidden="true"></i>
+                       '.$result[0][0].'&nbsp;'.$result[0][1].'
+                   </div>
+                     <div class ="form-group col-md-6">
+                       <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                       '.$result[0][7].'
+                   </div>
+               </div>
+               <div class="form-row">
+                   <div class="form-group col-md-6">
+                   <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                       '.$result[0][2].'
+                   </div>
+                   <div class="form-group col-md-6">
+                   <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                       '.$result[0][3].'        
+                   </div>
+               </div>
+           </div>
+           <div class="card-footer">
+           <h5>Prix total dépensé : '.$result[0][5].'€</h5>
+            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+           </div>
+       </div>
+   </div>
+</div>
  <br>';
 }
 
 function adminDisplayEnfant($id){
     global  $db;
 
-    $q = "SELECT nom, prenom, birth, idcommande, depense, idReservation FROM users WHERE id = ".$id;
+    $q = "SELECT nom, prenom, birth, idcommande, depense, idReservation, bagage FROM users WHERE id = ".$id;
     $sth = $db->prepare($q);
     $sth->execute();
     $result = $sth->fetchAll();
     echo '
- <div class="row">
-    <div class="col col-mx-auto">
-        <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant - Vol n° : '.$result[0][5].'</div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <i class="fa fa-user-o" aria-hidden="true"></i>
-                        '.$result[0][0].'&nbsp;'.$result[0][1].'
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                        '.$result[0][2].'        
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-            <h5>Prix total dépensé : '.$result[0][4].'€</h5>
-            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
-            </div>
-        </div>
-    </div>
- </div>
- <br>';
+       <div class="row">
+          <div class="col col-mx-auto">
+              <div class="card">
+                  <div class="card-header">Code utilisateur : '.$result[0][3].' - Enfant - Vol n° : '.$result[0][5].'</div>
+                  <div class="card-body">
+                      <div class="form-row">
+                          <div class="form-group col-md-6">
+                              <i class="fa fa-user-o" aria-hidden="true"></i>
+                              '.$result[0][0].'&nbsp;'.$result[0][1].'
+                          </div>
+                          <div class ="form-group col-md-6">
+                        <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                            '.$result[0][6].'
+                        </div>
+                      </div>
+                      <div class="form-row">
+                          <div class="form-group col-md-6">
+                          <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                              '.$result[0][2].'        
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                  <h5>Prix total dépensé : '.$result[0][4].'€</h5>
+                  <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+                  </div>
+              </div>
+          </div>
+       </div>
+       <br>';
 }

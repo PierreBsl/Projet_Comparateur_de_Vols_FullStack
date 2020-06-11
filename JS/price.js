@@ -1,5 +1,9 @@
-function maxPrice() {
+let jour="";
+let slideVal;
+
+function maxPrice(str) {
     console.log("Maxprice");
+    console.log(str);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -13,16 +17,23 @@ function maxPrice() {
             document.getElementById("range").max = tab['maxprice'];
             document.getElementById("range").min = tab['minprice'];
             document.getElementById("range").value = tab['maxprice'];
+            slideVal=tab['maxprice'];
+
             document.getElementById("textSlide").innerHTML = "Prix maximum: "+document.getElementById("range").value+" €";
 
         }
     };
-    xmlhttp.open("GET", "getmaxprice.php", true);
+    xmlhttp.open("GET", "getmaxprice.php?q="+str, false);
     xmlhttp.send();
 }
 
-function rangerVol(prix, order) {
-    console.log("Maxprice");
+function rangerVol(prix, order, str, search) {
+    if (search === false){
+        maxPrice("")
+        prix=slideVal;
+    }
+
+    console.log("RangerVol");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -40,9 +51,10 @@ function rangerVol(prix, order) {
             }
             let compteur = 0;
             let nbr_Flight=result.length;
+
+            let valeurSlide= document.getElementById("range").value; //Affichage load
             for (let k = 0; k < nbr_Flight; k++) {
-                let valeurSlide= document.getElementById("range").value;
-                if (result[k]['price'] <=valeurSlide)
+                if (result[k]['price'] <=prix)
                 {
                     if (order === 0){
                         document.getElementById("allCard").innerHTML = "<div class='card'>" +
@@ -94,19 +106,27 @@ function rangerVol(prix, order) {
                     document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible pour ce prix</div>";
                 }
 
+
             }
+
+            console.log("lel");
+            console.log(result[0]['date2']);
+            document.getElementById("jourActu").innerHTML = result[0]['date'];
+            document.getElementById("jourNext").innerHTML = result[0]['date1'];
+            document.getElementById("jourPre").innerHTML = result[0]['date2'];
+
 
         }
     };
-    xmlhttp.open("GET", "getprice.php", true);
+    xmlhttp.open("GET", "getprice.php?q="+str, true);
     xmlhttp.send();
 }
 
 window.onload = function() {
     console.log("Debut SQL");
-    maxPrice();
     let valeurSlide= document.getElementById("range").value;
-    rangerVol(valeurSlide,1);
+    rangerVol(valeurSlide,1, "", false);
+    slideVal=document.getElementById("range").value;
 
 };
 function changeNumer(){
@@ -127,22 +147,45 @@ function chargePage(){
 function launchSearch(){
     chargePage();
     let valeurSlide= document.getElementById("range").value;
-    rangerVol(valeurSlide, 1);
+    rangerVol(valeurSlide, 1, "", true);
 
 }
 
 function ASC(){
     chargePage();
     let valeurSlide= document.getElementById("range").value;
-    rangerVol(valeurSlide, 1);
+    rangerVol(valeurSlide, 1,"", true);
 }
 
 function DESC() {
     chargePage();
     let valeurSlide= document.getElementById("range").value;
-    rangerVol(valeurSlide, 0);
+    rangerVol(valeurSlide, 0, "", true);
+}
+
+function jourPre(){
+    console.log("Click Prev");
+    chargePage();
+    let valeurSlide= document.getElementById("range").value;
+    rangerVol(valeurSlide,1, "-1", false);
 
 }
+
+function jourNext(){
+    console.log("Click Next");
+    jour ="+1";
+    chargePage();
+    let valeurSlide= document.getElementById("range").value;
+    rangerVol(valeurSlide,1, "+1", false);
+}
+
+function jourActu(){
+    console.log("Click Prev");
+    chargePage();
+    let valeurSlide= document.getElementById("range").value;
+    rangerVol(valeurSlide,1, "", false);
+}
+
 
 function main() {
     console.log("Start");
@@ -153,6 +196,11 @@ function main() {
 
     document.getElementById("croissantButton").addEventListener("click", ASC);
     document.getElementById("decroissantButton").addEventListener("click", DESC);
+
+    document.getElementById("jourPre").addEventListener("click", jourPre);
+    document.getElementById("jourActu").addEventListener("click", jourActu);
+    document.getElementById("jourNext").addEventListener("click", jourNext);
+
 
 
 }

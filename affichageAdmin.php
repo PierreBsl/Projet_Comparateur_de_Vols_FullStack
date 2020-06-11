@@ -15,6 +15,7 @@ echo '<!doctype html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom styles for this template -->
     <link href="CSS/style.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="IMG/airplane-flight-around-the-planet.png" />
 </head>
 <body class="d-flex flex-column h-100">
 <header>
@@ -23,6 +24,7 @@ echo '<!doctype html>
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
     </nav>
 </header>
+<img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
 <div class="container col-md-9">
