@@ -2,6 +2,10 @@
 include 'controller.php';
 require_once 'connexpdo.php';
 
+if ($_SESSION['active']==3){
+    deleteReservation();;
+}
+
 $_SESSION['active']=0;
 
 echo '<!doctype html>
@@ -17,9 +21,18 @@ echo '<!doctype html>
     <link href="CSS/style.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column h-100">
+<div id="loading">
+    <div id="myNav" class="overlay" style="width: 100%">
+   <div class="overlay-content">
+        <div class="d-flex justify-content-center" style="color: orangered">
+            <div class="spinner-border" role="status" style="width: 4rem; height: 4rem;"></div>
+        </div>
+   </div>
+</div>
+</div>
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm justify-content-between">
+    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
         <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
@@ -106,6 +119,7 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
 </form>
     </div>
     <br>
+    
 </main>
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">

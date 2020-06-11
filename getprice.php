@@ -2,7 +2,6 @@
 require_once 'connexpdo.php';
 require_once "controller.php";
 
-$q = $_REQUEST["q"];
 global  $db;
 $depart = $_SESSION['originAirport'];
 $arrivee = $_SESSION['destinationAirport'];
@@ -63,6 +62,7 @@ for ($k = 0; $k < $nbr_Flight; $k++) {
     $tab[$k]['sessionDP'] = $_SESSION['destinationAirport'];
     $tab[$k]['daypropre'] = $daypropre;
 }
+
 
 
 echo json_encode($tab);

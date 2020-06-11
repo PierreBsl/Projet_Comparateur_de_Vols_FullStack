@@ -16,7 +16,6 @@ $nbrEnfants = $_SESSION['nbrEnfants'];
 echo '<!DOCTYPE html>
 <html lang="en" class="h-100">
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Air ISEN · Bootstrap</title>
@@ -28,24 +27,6 @@ echo '<!DOCTYPE html>
     <!-- Custom Stylsheet for Maps API -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.15/"></script>
-    <script>
-  require([
-      "esri/Map",
-      "esri/views/MapView"
-    ], function(Map, MapView) {
-
-    var map = new Map({
-      basemap: "topo-vector"
-    });
-
-    var view = new MapView({
-      container: "viewDiv",
-      map: map,
-      center: [-118.80500, 34.02700], // longitude, latitude
-      zoom: 13
-    });
-  });
-  </script>
 </head><body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
@@ -65,8 +46,8 @@ if ($_SESSION['active']==3){
         <br><br>
  <div class="row">
     <div class="col col-md-7">';
-        displayCardByAdult();
-        displayCardByChildren();
+    displayCardByAdult();
+    displayCardByChildren();
 
     echo '</div>
 <div style="border-left:1px solid darkgrey;height:288px"></div>
@@ -78,9 +59,7 @@ if ($_SESSION['active']==3){
 }else {
     echo '<div class="container col-md-9">
         <h1 id="mainIntro" class="display-4 text-center">Vos Passagers</h1>
-        <br><br>';
-    flightCoordonate();
-        echo '        
+        <br><br>      
  <div class="row">
     <div class="col col-md-7">';
     echo '<form action="controller.php?func=createUser" method="post">';
@@ -97,14 +76,16 @@ if ($_SESSION['active']==3){
 <div style="border-left:1px solid darkgrey;height:208px"></div>
     <div class="col">';
     displayFlight();
-    echo '<iframe style="width: 100%; height: 100%;" src="maps.php"></iframe></div>';
+    echo '<iframe style="width: 100%; height: 100%;" src="maps.php"></iframe><div style="height: 70px"></div></div>';
 }
 echo '
+
 </div>
 </main>
 </body>
 <br>
-<footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
+
+<footer class="footer mt-auto py-3 bg-white border-top shadow-sm fixed-bottom">
     <div class="container">
         <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>

@@ -25,11 +25,13 @@ echo '<!doctype html>
 </header>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
-    <div class="container col-md-10">
-        <h1 id="mainIntro" class="display-4 text-center">Menu Administrateur</h1><br><br>';
+<div class="container col-md-9">
+        <h1 id="mainIntro" class="display-4 text-center">Menu Administrateur</h1>
+        <br><br>
+    <div class="container col-md-9">';
 
 affichageAdmin();
-        echo '</div></div>
+echo '</div></div>
      <br>
 </form>
     </div>
@@ -41,5 +43,4 @@ affichageAdmin();
         <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
-<script src="JS/ajax.js"></script>
 </html>';

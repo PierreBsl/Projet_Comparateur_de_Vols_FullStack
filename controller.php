@@ -46,7 +46,7 @@ if (isset($_GET["func"]))
         header( "Location:index.php?error=confirm");
     }
     if ($_GET["func"]=="deleteReservation"){
-            deleteReservation();
+        deleteReservation();
     }
 
 }
@@ -200,7 +200,7 @@ function displayCommande(){
     echo '<p class="card-text">- ' . $_SESSION['nbrEnfants'] . ' x Enfant(s) &nbsp; : &nbsp; ' . $enfantPrice . '€';
     echo '</div>';
     echo '<div class="col">';
-    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Total Price ' . getTotPrice() . '€</h5>';
+    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Prix Total ' . getTotPrice() . '€</h5>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -265,117 +265,6 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
     $_SESSION['nbrAdultes']=$nbrAdults;
     $_SESSION['nbrEnfants']=$nbrEnfants;
     $_SESSION['volDirectCheck']=$volDirect;
-
-}
-
-function readFlights(){
-    global  $db;
-
-    $depart = $_SESSION['originAirport'];
-    $arrivee = $_SESSION['destinationAirport'];
-    $date = $_SESSION['departDate'];
-    $nbrAdults = $_SESSION['nbrAdultes'];
-    $nbrEnfants = $_SESSION['nbrEnfants'];
-    $volDirect = $_SESSION['volDirectCheck'];
-
-
-    $nbPlace=$nbrAdults+$nbrEnfants;
-    $route = " ".$depart."-".$arrivee;
-    $unixTimestamp = strtotime($date);
-    $dayOfWeek = date("w", $unixTimestamp); //dayoftime
-    $_SESSION['dayOfWeek'] = $dayOfWeek;
-    $daypropre = date("d/m/Y", $unixTimestamp);
-
-    $nbr_Flight=0;
-
-    $query = "SELECT id FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
-    $result = $db->prepare($query);
-    $result->execute();
-    $res = $result->fetchAll();
-    foreach ($res as $data){
-        $nbr_Flight++;
-    }
-    if($nbr_Flight == 0){
-        header("Location: index.php?error=trajetvide");
-    }
-    $origincity="";
-    $destinationcity="";
-
-    $query = "SELECT city FROM ville WHERE code = ' ".$depart."'";
-    $origin = $db->query($query);
-    foreach ($origin as $data) {
-        $origincity = $data['city'];
-        $_SESSION['origincity'] = $origincity;
-    }
-    $query = "SELECT city FROM ville WHERE code = ' ".$arrivee."'";
-    $origin = $db->query($query);
-    foreach ($origin as $data) {
-        $destinationcity = $data['city'];
-        $_SESSION['destinationcity'] = $destinationcity;
-    }
-
-    $query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND flightsize >='".$nbPlace."')";
-    $sth = $db->prepare($query1);
-    $sth->execute();
-    $result=$sth->fetchAll();
-
-    for ($k = 0; $k < $nbr_Flight; $k++) {
-        $capacity = flightCapacity($result[$k]['id']);
-        $price = getPrice($result[$k]['id'], isWeekEnd(),dateDiff(), getRemplissage(flightCapacity($result[$k]['id'])));
-        $travelTime = travelTime($result[$k]['id']);
-
-        echo '<div class="card">';
-        echo '<h5 class="card-header"> Vol #' . $result[$k]['id'] . '</h5>';
-        echo '<div class="card-body">';
-        echo '<h5 class="card-title"><i class="fa fa-plane"></i> &nbsp;' . $result[$k]['departuretime'] . ' - ' . $result[$k]['arrivaltime'] . '</h5>';
-        echo '<div class="row" >';
-        echo '<div class="col">';
-        echo '<p class="card-text"><i class="fa fa-map-marker"></i> ' . $origincity . ' ('.$_SESSION['originAirport']. ') à ' .
-            $destinationcity . ' ('.$_SESSION['destinationAirport'].')'.'<br><i class="fa fa-calendar"></i> '.$daypropre.'</p>';
-        echo '</div>';
-        echo '<div class="col">';
-        echo '<p class="card-text">Durée du voyage <br><i class="fa fa-clock-o" ></i>&nbsp;'.$travelTime;
-        echo '</div>';
-        echo '<div class="col">';
-        echo '<p class="card-text">Capacité Restante <br> <div class="progress">';
-        echo '<div id="progress-bar" class="progress-bar bg-white" style="width:'.$capacity.'%;color:white; background-color:orangered !important;" aria-valuemin="0" aria-valuemax="100">'.flightCapacity($result[$k]['id']).' %</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '<hr>';
-        echo '<h5 class="card-text">À partir de '.$price.'€</h5>';
-        echo '<form method="POST" action="controller.php?func=selectedFlight&id='.$result[$k]['id'].'&price='.$price.'&travelTime='.$travelTime.'&capacity='.$capacity.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Sélectionner</button></form>';
-        echo '</div>';
-        echo '</div><br>';
-    }
-}
-
-function flightCoordonate(){
-    global  $db;
-
-    $depart = $_SESSION['originAirport'];
-    $arrivee = $_SESSION['destinationAirport'];
-
-    $coordonate = [];
-
-    $query = "SELECT longitude, latitude FROM ville WHERE code = ' ".$depart."'";
-    $origin = $db->query($query);
-    foreach ($origin as $data) {
-        $longitude = $data['longitude'];
-        $latitude = $data['latitude'];
-        $coordonate[0][0]=$longitude;
-        $coordonate[0][1]=$latitude;
-    }
-    $query = "SELECT longitude, latitude FROM ville WHERE code = ' ".$arrivee."'";
-    $origin = $db->query($query);
-    foreach ($origin as $data) {
-        $longitude = $data['longitude'];
-        $latitude = $data['latitude'];
-        $coordonate[1][0]=$longitude;
-        $coordonate[1][1]=$latitude;
-    }
-
-    return $coordonate;
 
 }
 
@@ -643,7 +532,7 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     $sth5 = $db->prepare($query5);
     $sth5->execute();
     $result5 = $sth5->fetch();
-
+    $lel = $priceFly + $result4[0] + $result5[0];
     return $priceFly + $result4[0] + $result5[0];
 }
 
@@ -782,7 +671,6 @@ function adminDisplayEnfant($id){
             <h5>Prix total dépensé : '.$result[0][4].'€</h5>
             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
-
         </div>
     </div>
  </div>

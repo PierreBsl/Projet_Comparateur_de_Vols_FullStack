@@ -1,3 +1,4 @@
+
 function showHint() {
     console.log("Key up");
     var xmlhttp = new XMLHttpRequest();
@@ -14,23 +15,32 @@ function showHint() {
                 document.getElementById("ville2").innerHTML += '<option value="'+tab["code"][i]+'">'+tab["ville"][i]+'</option>';
                 document.getElementById("ville3").innerHTML += '<option value="'+tab["code"][i]+'">'+tab["ville"][i]+'</option>';
             }
+            document.getElementById("loading").innerHTML ="";
 
         }
     };
     xmlhttp.open("GET", "gethint.php", true);
     xmlhttp.send();
+
 }
 
 window.onload = function() {
+    /*document.getElementById("loading").innerHTML = "<div id='myNav' class='overlay' style='width: 100%'>" +
+        "<div class='overlay-content'>" +
+        "<div class='d-flex justify-content-center' style='color: orangered'>" +
+        "<div class='spinner-border' role='status' style='width: 4rem; height: 4rem;'></div>" +
+        "</div>" +
+        "</div>" +
+        "</div>";*/
     console.log("Debut SQL");
     showHint();
+
 
 };
 
 
 function main() {
     console.log("Start");
-    //onloadstart(showHint());
 
 }
 main();

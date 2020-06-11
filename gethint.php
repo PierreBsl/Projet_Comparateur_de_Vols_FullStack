@@ -2,13 +2,8 @@
 
 require_once 'connexpdo.php';
 
-$dsn = 'pgsql:host=localhost;port=5433;dbname=avion;';
-$user = 'postgres';
-$password = 'new_password';
-$db = connexpdo($dsn, $user, $password);
+global $db;
 
-
-$a = array();
 $tab = [];
 $query = "SELECT code, city FROM ville ORDER BY city";
 $result = $db->prepare($query);
@@ -22,7 +17,7 @@ foreach ($res as $data){
     $compteur++;
 
 }
-
+$tab2=$tab;
 echo json_encode($tab);
 
 

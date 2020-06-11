@@ -42,6 +42,10 @@ for ($k = 0; $k < $nbrflights; $k++) {
         $minimum = $price;
     }
 }
+if($nbrflights == 1 ){
+    $minimum=0;
+}
+
 
 $tab=[];
 
