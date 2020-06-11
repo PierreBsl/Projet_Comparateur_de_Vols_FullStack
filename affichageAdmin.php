@@ -20,8 +20,13 @@ echo '<!doctype html>
 <body class="d-flex flex-column h-100">
 <header>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-white border-bottom shadow-sm">
-        <a id="mainTitle" class="navbar-brand" href="index.php">Air ISEN Search</a>
+    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm justify-content-between">
+        <a id="mainTitle" class="navbar-brand" href="index.php" title="Accueil">
+        <img src="IMG/airplane-flight-around-the-planet.svg" alt="Icone Air ISEN" style="width: 50px">
+        &nbsp;Air ISEN Search</a>        
+        <div style="float: right">
+            <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
+        </div>
     </nav>
 </header>
 <img src="IMG/panorama.jpg" class="img-fluid" alt="Responsive image" style="max-width: 100%; height: auto;">

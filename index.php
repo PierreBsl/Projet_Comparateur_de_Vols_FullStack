@@ -5,7 +5,9 @@ require_once 'connexpdo.php';
 if ($_SESSION['active']==3){
     deleteReservation();;
 }
-
+$_SESSION["mailUser"]="";
+$_SESSION["birthUser"]="";
+$_SESSION["userId"]="";
 $_SESSION['active']=0;
 
 echo '<!doctype html>
@@ -68,6 +70,9 @@ if (isset($_GET["error"]))
     }
     if ($_GET["error"]=="noaccount"){
         echo '<div class="alert alert-warning" role="alert">Vous n avez pas de billet à votre nom !</div>';
+    }
+    if ($_GET["error"]=="stopBillet"){
+        echo '<div class="alert alert-warning" role="alert">Pas de billet sur le compte !</div>';
     }
     if ($_GET["error"] == "troppassager"){
         echo '<div class="alert alert-warning" role="alert">Limité à 9 reservations !</div>';

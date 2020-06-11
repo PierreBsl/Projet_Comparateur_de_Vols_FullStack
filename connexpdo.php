@@ -8,7 +8,7 @@ function connexpdo($base, $user, $password){
     }
 }
 
-$dsn = 'pgsql:host=localhost;port=5433;dbname=avion;';
+$dsn = 'pgsql:host=localhost;port=5432;dbname=avion;';
 $user = 'postgres';
 $password = 'new_password';
 $db = connexpdo($dsn, $user, $password);

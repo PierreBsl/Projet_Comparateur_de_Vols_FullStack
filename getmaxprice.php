@@ -8,22 +8,24 @@ $q = $_REQUEST["q"];
 $depart = $_SESSION['originAirport'];
 $arrivee = $_SESSION['destinationAirport'];
 $date = $_SESSION['departDate'];
+$tmp=$date;
 
-/*
+$date0 = new DateTime($date);
+$date0->add(new DateInterval('P1D'));
+$date5= $date0->format('Y-m-d');
+
+$date2 = new DateTime($date);
+$date2->sub(new DateInterval('P1D'));
+$date6= $date2->format('Y-m-d');
+
 if($q == "+1"){
-    $date4 = new DateTime($date);
-    $date4->add(new DateInterval('P1D'));
-    $date5= $date4->format('Y-m-d');
-
+    $date=$date5;
     $_SESSION['departDate']=$date5;
 }
 if($q == "-1"){
-    $date6 = new DateTime($date);
-    $date6->sub(new DateInterval('P1D'));
-    $date7= $date6->format('Y-m-d');
-
-    $_SESSION['departDate']=$date7;
-}*/
+    $date=$date6;
+    $_SESSION['departDate']=$date6;
+}
 
 $nbrAdults = $_SESSION['nbrAdultes'];
 $nbrEnfants = $_SESSION['nbrEnfants'];

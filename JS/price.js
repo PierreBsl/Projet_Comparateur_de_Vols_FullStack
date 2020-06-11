@@ -29,7 +29,8 @@ function maxPrice(str) {
 
 function rangerVol(prix, order, str, search) {
     if (search === false){
-        maxPrice("")
+        maxPrice(str);
+        str="";
         prix=slideVal;
     }
 
@@ -50,12 +51,16 @@ function rangerVol(prix, order, str, search) {
                 document.getElementById("actualOrder").innerHTML = "Actuel : Croissant";
             }
             let compteur = 0;
+            let tmp = 0;
             let nbr_Flight=result.length;
-
+            console.log("Fligggggg"+nbr_Flight);
             let valeurSlide= document.getElementById("range").value; //Affichage load
             for (let k = 0; k < nbr_Flight; k++) {
                 if (result[k]['price'] <=prix)
                 {
+                    if (result[k]['capacity'] === 0){
+                        result[k]['capacity']=1;
+                    }
                     if (order === 0){
                         document.getElementById("allCard").innerHTML = "<div class='card'>" +
                             "<h5 class='card-header'> Vol #"+result[k]['id']+"</h5>" +
@@ -68,8 +73,8 @@ function rangerVol(prix, order, str, search) {
                             "<div class='col'>"+
                             "<p class='card-text'>Durée du voyage <br><i class='fa fa-clock-o' ></i>&nbsp;"+result[k]['travelTime']+"</div>"+
                             "<div class='col'>"+
-                            "<p class='card-text'>Capacité Restante <br> <div class='progress'>"+
-                            "<div id='progress-bar' class='progress-bar bg-white' style='width:"+result[k]['capacity']+"%;color:white; background-color:orangered !important;' aria-valuemin='0' aria-valuemax='100'>"+result[k]['capacity']+" %</div>"+
+                            "<p class='card-text'>Capacité Restante: "+result[k]['capacity']+"% <br> <div class='progress'>"+
+                            "<div id='progress-bar' class='progress-bar bg-white' style='width:"+result[k]['capacity']+"%;color:white; background-color:orangered !important;' aria-valuemin='1' aria-valuemax='100'>"+result[k]['capacity']+" %</div>"+
                             "</div>"+
                             "</div>"+
                             "</div>"+
@@ -89,8 +94,8 @@ function rangerVol(prix, order, str, search) {
                             "<div class='col'>"+
                             "<p class='card-text'>Durée du voyage <br><i class='fa fa-clock-o' ></i>&nbsp;"+result[k]['travelTime']+"</div>"+
                             "<div class='col'>"+
-                            "<p class='card-text'>Capacité Restante <br> <div class='progress'>"+
-                            "<div id='progress-bar' class='progress-bar bg-white' style='width:"+result[k]['capacity']+"%;color:white; background-color:orangered !important;' aria-valuemin='0' aria-valuemax='100'>"+result[k]['capacity']+" %</div>"+
+                            "<p class='card-text'>Capacité Restante: "+result[k]['capacity']+"% <br> <div class='progress'>"+
+                            "<div id='progress-bar' class='progress-bar bg-white' style='width:"+result[k]['capacity']+"%;color:white; background-color:orangered !important;' aria-valuemin='1' aria-valuemax='100'>"+result[k]['capacity']+" %</div>"+
                             "</div>"+
                             "</div>"+
                             "</div>"+
@@ -105,15 +110,30 @@ function rangerVol(prix, order, str, search) {
                 if (compteur === 0){
                     document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible pour ce prix</div>";
                 }
-
-
+                tmp++;
             }
-
+            if (tmp === 0){
+                document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible cette date</div>";
+            }
             console.log("lel");
             console.log(result[0]['date2']);
             document.getElementById("jourActu").innerHTML = result[0]['date'];
-            document.getElementById("jourNext").innerHTML = result[0]['date1'];
-            document.getElementById("jourPre").innerHTML = result[0]['date2'];
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + (parseInt(dd)+1);
+
+            console.log("Date = "+today);
+            if (result[0]['date'] === today){
+                document.getElementById("jourPre").disabled = true;
+            }else {
+                document.getElementById("jourPre").disabled = false;
+            }
+            document.getElementById("jourNext").innerHTML = "&raquo;";
+            document.getElementById("jourPre").innerHTML = "&laquo;";
+
 
 
         }
@@ -173,7 +193,6 @@ function jourPre(){
 
 function jourNext(){
     console.log("Click Next");
-    jour ="+1";
     chargePage();
     let valeurSlide= document.getElementById("range").value;
     rangerVol(valeurSlide,1, "+1", false);

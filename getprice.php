@@ -19,9 +19,11 @@ $date6= $date2->format('Y-m-d');
 
 if($q == "+1"){
     $date=$date5;
+    $_SESSION['departDate']=$date5;
 }
 if($q == "-1"){
     $date=$date6;
+    $_SESSION['departDate']=$date6;
 }
 
 $nbrAdults = $_SESSION['nbrAdultes'];
@@ -62,7 +64,7 @@ $daypropre = date("d/m/Y", $unixTimestamp);
 
 $nbr_Flight=0;
 
-$query = "SELECT id FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND (flightsize >='".$nbPlace."'AND week = '".$week."'))";
+$query = "SELECT id FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND (flightcapacity >='".$nbPlace."'AND week = '".$week."'))";
 $result = $db->prepare($query);
 $result->execute();
 $res = $result->fetchAll();
@@ -89,7 +91,7 @@ foreach ($origin as $data) {
 
 
 
-$query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND (flightsize >='".$nbPlace."' AND week = '".$week."'))";
+$query1 = "SELECT id, route, distancekm, departuretime, arrivaltime FROM flights WHERE route ='".$route."' AND (dayofweek ='".$dayOfWeek."' AND (flightcapacity >='".$nbPlace."' AND week = '".$week."'))";
 $sth = $db->prepare($query1);
 $sth->execute();
 $result=$sth->fetchAll();
@@ -107,7 +109,7 @@ for ($k = 0; $k < $nbr_Flight; $k++) {
     $tab[$k]['week'] = $week;
 }
 
-$tab[0]['date'] = $tmp;
+$tab[0]['date'] = $_SESSION['departDate'];
 $tab[0]['date1'] = $date5;
 $tab[0]['date2'] = $date6;
 

@@ -173,11 +173,7 @@ function deletePeopleUser($id){
     $result = $sth2->fetchall();
 
     if(empty($result[0])){
-
-        $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-
+        echo'la';
         $query3 = "DELETE FROM users WHERE idcommande =".$result1[0];
         $sth3 = $db->prepare($query3);
         $sth3->execute();
@@ -218,7 +214,7 @@ function userDisplayEnfant($id){
             </div>
             <div class="card-footer">
             <h5>Prix total dépensé : '.$result[0][4].'€</h5>
-            <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
 
         </div>
@@ -240,7 +236,7 @@ function userDisplayAdult($id){
  <div class="row">
     <div class="col col-mx-auto">
         <div class="card">
-            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
+            <div class="card-header">Code utilisateur : '.$result[0][4].' - Adulte - Vol n° : '.$result[0][6].'</div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -265,7 +261,7 @@ function userDisplayAdult($id){
             </div>
             <div class="card-footer">
             <h5>Prix total dépensé : '.$result[0][5].'€</h5>
-             <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+             <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
         </div>
     </div>
@@ -287,6 +283,7 @@ function creationUserView(){
     $id = $r;
 
     if(sizeof($id) == 0){
+        header( "Location:index.php?error=stopBillet");
         echo '<div class="alert alert-warning" role="alert">
             Vous avez supprimer tous les vols <a href="index.php" class="alert-link">Revenir à l\'index</a>
             </div>';
@@ -432,6 +429,7 @@ function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $vol
     $_SESSION['volDirectCheck']=$volDirect;
 
 }
+
 function CreateFormAdult($id){
     $_SESSION['nbBagage']=0;
 
@@ -470,7 +468,7 @@ function CreateFormAdult($id){
                 <div class="form-row">
                     <div class = "form-group col-md-6">
                         Nombre de bagage en soute : 
-                        <input type="number" placeholder="bagage" class="form-control" name="bagage'.$id.'" min="0" max="30" required>
+                        <input type="number" placeholder="Bagage(s)" class="form-control" name="bagage'.$id.'" min="0" max="5" required>
                       
                     </div>
                 </div>
@@ -747,7 +745,7 @@ function deletePeople($id){
     $sth1->execute();
     $sth1->fetch();
 
-    $sql = "UPDATE flights SET flightcapacity = flightcapacity - 1 WHERE id='".$_SESSION['selectedVolId']."'";
+    $sql = "UPDATE flights SET flightcapacity = flightcapacity + 1 WHERE id='".$_SESSION['selectedVolId']."'";
     $stmt = $db->prepare($sql);
     $stmt->execute();
 
@@ -766,7 +764,9 @@ function affichageAdmin(){
     $sth->execute();
     $result = $sth->fetch();
 
-
+    if($result[0] == 0){
+        echo '<div class="alert alert-warning" role="alert">Aucun vol n a été réservé !</div>';
+    }
 
     for($i = 0; $i < $result[0] + 1; $i++){
 
@@ -780,7 +780,6 @@ function affichageAdmin(){
         } else if($result2[0] == 1) {   //Adult
             adminDisplayAdult($i);
         }
-
     }
 }
 
@@ -796,7 +795,7 @@ function adminDisplayAdult($id){
  <div class="row">
    <div class="col col-mx-auto">
        <div class="card">
-           <div class="card-header">Code utilisateur : '.$result[0][4].' - Adult - Vol n° : '.$result[0][6].'</div>
+           <div class="card-header">Code utilisateur : '.$result[0][4].' - Adulte - Vol n° : '.$result[0][6].'</div>
            <div class="card-body">
                <div class="form-row">
                    <div class="form-group col-md-6">
@@ -821,7 +820,7 @@ function adminDisplayAdult($id){
            </div>
            <div class="card-footer">
            <h5>Prix total dépensé : '.$result[0][5].'€</h5>
-            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
            </div>
        </div>
    </div>
@@ -861,7 +860,7 @@ function adminDisplayEnfant($id){
                   </div>
                   <div class="card-footer">
                   <h5>Prix total dépensé : '.$result[0][4].'€</h5>
-                  <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Delete</button></form>
+                  <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
                   </div>
               </div>
           </div>
