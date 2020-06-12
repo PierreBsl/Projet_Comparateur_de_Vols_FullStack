@@ -42,7 +42,6 @@ function rangerVol(prix, order, str, search) {
                 document.getElementById("actualOrder").innerHTML = "Actuel : Croissant";
             }
             let compteur = 0;
-            let tmp = 0;
             let nbr_Flight=result.length;
 
             for (let k = 0; k < nbr_Flight; k++) {
@@ -100,9 +99,8 @@ function rangerVol(prix, order, str, search) {
                 if (compteur === 0){
                     document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible pour ce prix</div>";
                 }
-                tmp++;
             }
-            if (tmp === 0){
+            if (compteur === 0 && document.getElementById("range").value === document.getElementById("range").max){
                 document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible cette date</div>";
             }
 
