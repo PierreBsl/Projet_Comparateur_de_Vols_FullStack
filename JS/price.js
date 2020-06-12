@@ -1,17 +1,12 @@
-let jour="";
+
 let slideVal;
 
 function maxPrice(str) {
-    console.log("Maxprice");
-    console.log(str);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log("test1");
             let tab=this.responseText;
-            console.log(tab);
 
-            console.log("test2");
             tab=JSON.parse(tab);
 
             document.getElementById("range").max = tab['maxprice'];
@@ -34,27 +29,22 @@ function rangerVol(prix, order, str, search) {
         prix=slideVal;
     }
 
-    console.log("RangerVol");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log("test1");
             let result=this.responseText.split(',');
-            console.log(result);
             result=JSON.parse(result);
-            console.log(result);
             document.getElementById("allCard").innerHTML = "";
             if (order === 0)
             {
-                document.getElementById("actualOrder").innerHTML = "Actuel : Decroissant";
+                document.getElementById("actualOrder").innerHTML = "Actuel : Décroissant";
             }else {
                 document.getElementById("actualOrder").innerHTML = "Actuel : Croissant";
             }
             let compteur = 0;
             let tmp = 0;
             let nbr_Flight=result.length;
-            console.log("Fligggggg"+nbr_Flight);
-            let valeurSlide= document.getElementById("range").value; //Affichage load
+
             for (let k = 0; k < nbr_Flight; k++) {
                 if (result[k]['price'] <=prix)
                 {
@@ -115,17 +105,15 @@ function rangerVol(prix, order, str, search) {
             if (tmp === 0){
                 document.getElementById("allCard").innerHTML = "<div class='alert alert-primary' role='alert'>Aucun vol disponible cette date</div>";
             }
-            console.log("lel");
-            console.log(result[0]['date2']);
+
             document.getElementById("jourActu").innerHTML = result[0]['date'];
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
             var yyyy = today.getFullYear();
 
             today = yyyy + '-' + mm + '-' + (parseInt(dd)+1);
 
-            console.log("Date = "+today);
             if (result[0]['date'] === today){
                 document.getElementById("jourPre").disabled = true;
             }else {
@@ -134,8 +122,6 @@ function rangerVol(prix, order, str, search) {
             document.getElementById("jourNext").innerHTML = "&raquo;";
             document.getElementById("jourPre").innerHTML = "&laquo;";
 
-
-
         }
     };
     xmlhttp.open("GET", "getprice.php?q="+str, true);
@@ -143,7 +129,6 @@ function rangerVol(prix, order, str, search) {
 }
 
 window.onload = function() {
-    console.log("Debut SQL");
     let valeurSlide= document.getElementById("range").value;
     rangerVol(valeurSlide,1, "", false);
     slideVal=document.getElementById("range").value;
@@ -151,7 +136,6 @@ window.onload = function() {
 };
 function changeNumer(){
     document.getElementById("textSlide").innerHTML = "Prix maximum: "+document.getElementById("range").value+" €";
-    console.log(document.getElementById("range").value);
 
 }
 function chargePage(){
@@ -184,7 +168,6 @@ function DESC() {
 }
 
 function jourPre(){
-    console.log("Click Prev");
     chargePage();
     let valeurSlide= document.getElementById("range").value;
     rangerVol(valeurSlide,1, "-1", false);
@@ -192,14 +175,12 @@ function jourPre(){
 }
 
 function jourNext(){
-    console.log("Click Next");
     chargePage();
     let valeurSlide= document.getElementById("range").value;
     rangerVol(valeurSlide,1, "+1", false);
 }
 
 function jourActu(){
-    console.log("Click Prev");
     chargePage();
     let valeurSlide= document.getElementById("range").value;
     rangerVol(valeurSlide,1, "", false);
@@ -207,7 +188,6 @@ function jourActu(){
 
 
 function main() {
-    console.log("Start");
     document.getElementById("range").addEventListener("change", changeNumer);
 
     document.getElementById("searchButton").addEventListener("click", launchSearch);

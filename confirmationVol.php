@@ -1,5 +1,8 @@
 <?php
 include 'controller.php';
+
+
+
 if ($_SESSION['active'] != 2 && $_SESSION['active'] != 3){
     if ($_SESSION['active'] == 0)
     {
@@ -37,7 +40,7 @@ echo '<!DOCTYPE html>
         &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
-            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+            <a class="navbar-brand" href="admin/affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
         </div>
     </nav>
 </header>
@@ -85,13 +88,13 @@ if ($_SESSION['active']==3){
  <div class="row">
     <div class="col col-md-7">';
     echo '<form action="controller.php?func=createUser" method="post">';
-
     for ($i = 0; $i < $nbrAdults; $i++) {
         CreateFormAdult($i + 1);
     }
     for ($i = 0; $i < $nbrEnfants; $i++) {
         CreateFormEnfant($i + 1);
     }
+
     echo '<button name="validation" type ="submit" class="btn btn-lg btn-white" style="width: 100%">Valider</button>';
     echo '</form>';
     echo '</div>
@@ -109,7 +112,7 @@ echo '
 
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm fixed-bottom">
     <div class="container">
-        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
+        <span class="text-muted">Développé par Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 </html>';

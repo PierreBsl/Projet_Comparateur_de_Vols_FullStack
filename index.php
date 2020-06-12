@@ -22,6 +22,7 @@ echo '<!doctype html>
     <!-- Custom styles for this template -->
     <link href="CSS/style.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="IMG/airplane-flight-around-the-planet.png" />
+    <script src=\'https://kit.fontawesome.com/a076d05399.js\'></script>
 </head>
 <body class="d-flex flex-column h-100">
 <div id="loading">
@@ -41,7 +42,7 @@ echo '<!doctype html>
         &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
-            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+            <a class="navbar-brand" href="admin/affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
         </div>
     </nav>
 </header>
@@ -50,32 +51,33 @@ echo '<!doctype html>
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
     <div class="container col-md-9">
-        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>';
+        <h1 id="mainIntro" class="display-4 text-center">Bienvenue · Welcome · Bienvenidos</h1>
+        <p class="lead text-center">Comparez les prix. Réservez le meilleur. Voyagez en confiance</p>';
 if (isset($_GET["error"]))
 {
     if ($_GET["error"]=="villedepart"){
-        echo '<div class="alert alert-danger" role="alert">L\'aéroport d\'arrivée n\'existe pas !</div>';
+        echo '<div class="alert alert-danger" role="alert">L\'aéroport de départ n\'existe pas !</div>';
     }
     if ($_GET["error"]=="villearrivee"){
         echo '<div class="alert alert-danger" role="alert">L\'aéroport d\'arrivée n\'existe pas !</div>';
     }
     if ($_GET["error"]=="trajetvide"){
-        echo '<div class="alert alert-warning" role="alert">Aucun vols pour ce jour-ci</div>';
+        echo '<div class="alert alert-warning" role="alert">Aucun vol pour ce jour-ci</div>';
     }
-    if ($_GET["error"]=="confirm"){
-        echo '<div class="alert alert-success" role="alert">Votre Réservation à bien été enregistrée. Vous pouvez la consulter sur votre espace Client</div>';
+    if ($_GET["valid"]=="confirm"){
+        echo '<div class="alert alert-success" role="alert">Votre Réservation a bien été enregistrée. Vous pouvez la consulter sur votre Espace Client</div>';
     }
     if ($_GET["error"]=="cancelled"){
-        echo '<div class="alert alert-success" role="alert">Votre Réservation à bien été annulée</div>';
+        echo '<div class="alert alert-success" role="alert">Votre Réservation a bien été annulée</div>';
     }
     if ($_GET["error"]=="noaccount"){
-        echo '<div class="alert alert-warning" role="alert">Vous n avez pas de billet à votre nom !</div>';
+        echo '<div class="alert alert-warning" role="alert">Vous n\'avez pas de billet à votre nom !</div>';
     }
     if ($_GET["error"]=="stopBillet"){
         echo '<div class="alert alert-warning" role="alert">Pas de billet sur le compte !</div>';
     }
     if ($_GET["error"] == "troppassager"){
-        echo '<div class="alert alert-warning" role="alert">Limité à 9 reservations !</div>';
+        echo '<div class="alert alert-warning" role="alert">Limité à 9 réservations !</div>';
     }
 
 }
@@ -85,21 +87,32 @@ echo '       <br><br>
             <div class="col col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form action="controller.php?func=readFlights" method="POST">
+                        
+<form action="controller.php?func=readFlights" method="POST">
                             <div class="form-row">
-                                <div class="form-group col-md-6"> 
-                                    Aéroport de départ
-                                    <input type="text" class="form-control" name="originAirport" list="iddata1" autocomplete="off" placeholder="D\'où partez-vous ?" required>
-                                    <datalist id="iddata1">
-                                        <select name="ville3" id="ville3"></select>
-                                    </datalist>
+                                <div class="form-group col-md-6">
+                                        Aéroport de départ
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text" style="background-color: white"><i class=\'fas fa-plane-departure\'></i></div>
+                                         </div>
+                                        <input type="text" class="form-control" name="originAirport" list="iddata1" autocomplete="off" placeholder="D\'où partez-vous ?" required>
+                                        <datalist id="iddata1">
+                                            <select name="ville3" id="ville3"></select>
+                                        </datalist>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     Aéroport d\'arrivée
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                              <div class="input-group-text" style="background-color: white"><i class=\'fas fa-plane-arrival\'></i></div>
+                                        </div>
                                     <input type="text" class="form-control" name="destinationAirport" list="iddata2" autocomplete="off" placeholder="Où allez-vous ?" required>
                                     <datalist id="iddata2">
                                         <select name="ville2" id="ville2"></select>
                                     </datalist>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -109,18 +122,38 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    Adultes (> 4 Ans) <input type="number" placeholder="Nombre d\'adultes" class="form-control" name="nbrAdultes" min="1" max="10" required>
+                                    Adultes (> 4 Ans) 
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <div class="input-group-text" style="background-color: white"><i class="fa fa-male" aria-hidden="true"></i></div>
+                                        </div>
+                                        <input type="number" placeholder="Nombre d\'adultes" class="form-control" name="nbrAdultes" min="1" max="10" required>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    Enfants ( 0-4 Ans) <input type="number" placeholder="Nombre d\'enfants" class="form-control" name="nbrEnfants" min="0" max="10" required>
+                                    Enfants ( 0-4 Ans) 
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                                <div class="input-group-text" style="background-color: white"><i class=\'fas fa-baby\'></i></div>
+                                        </div>
+                                    <input type="number" placeholder="Nombre d\'enfants" class="form-control" name="nbrEnfants" min="0" max="10" required>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="volDirectCheck" class="form-group col-md-6">
-                                <input class="form-check-input" type="checkbox" name="volDirectCheck" value="1">
-                                Vol direct
-                            </div>
-                            <button type="submit" class="btn btn-white">Suivant</button>
+                            <button type="submit" class="btn btn-white" style="width: 25%">Suivant</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div style="border-left:1px solid darkgrey;height:352px"></div>
+            <div class="col">
+                <div class="card" style="height: 353px">
+                <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
+                </div>
+            </div>
+        </div>
+     <br>
+</form>
                     </div>
                 </div>
             </div>
@@ -141,7 +174,7 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
-        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
+        <span class="text-muted">Développé par Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 <script src="JS/ajax.js"></script>

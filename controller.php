@@ -2,6 +2,20 @@
 
 require_once 'connexpdo.php';
 
+$message = "<html>
+        <head>
+        </head>
+        <body>
+        <h1>Bienvenue !</h1>
+        <p>Votre r&eacute;servation &agrave; bien &eacute;t&eacute; enregistr&eacute; !</p>
+        <p>
+            Pour obtenir votre billet connectez-vous &agrave; votre espace de connexion sur <br />
+            <p>AIR-ISEN : <a href=\"https://35.174.211.22/index.php\">https://35.174.211.22/index.php</a></p> <br />
+          
+        </p>
+        </body>
+</html>";
+
 session_start();
 
 if (isset($_GET["func"]))
@@ -38,7 +52,12 @@ if (isset($_GET["func"]))
         confirmAdult();
         confirmChildren();
         deleteReservation();
-        header( "Location:index.php?error=confirm");
+        if ($_POST['mailConfirm'] == "1"){
+            require_once "PHPMailer/examples/gmail.php";
+            $message = send_Mail($_SESSION["mailSend"],"AIR-ISEN", "Validation de votre billet" ,$message);
+        }
+
+        header( "Location:index.php?valid=confirm");
     }
     if ($_GET["func"]=="deleteReservation"){
         deleteReservation();
@@ -147,7 +166,7 @@ function ConnectUser($mail, $birth) {
         $_SESSION["userId"] = $r;
         header("Location:userView.php");
     } else {
-        header("Location:index.php?error=noaccount");   //TODO Ajoueter gestion erreur
+        header("Location:index.php?error=noaccount");
     }
 }
 
@@ -213,7 +232,7 @@ function userDisplayEnfant($id){
                 </div>
             </div>
             <div class="card-footer">
-            <h5>Prix total dépensé : '.$result[0][4].'€</h5>
+            <h5>Prix dépensé : '.$result[0][4].'€</h5>
             <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
 
@@ -260,7 +279,7 @@ function userDisplayAdult($id){
                 </div>
             </div>
             <div class="card-footer">
-            <h5>Prix total dépensé : '.$result[0][5].'€</h5>
+            <h5>Prix dépensé : '.$result[0][5].'€</h5>
              <form method="POST" action="controller.php?func=deletePeopleUser&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
             </div>
         </div>
@@ -271,7 +290,6 @@ function userDisplayAdult($id){
 
 function creationUserView(){
     global $db;
-    $id = $_SESSION["userId"];
 
     $tempTab = [];
 
@@ -285,7 +303,7 @@ function creationUserView(){
     if(sizeof($id) == 0){
         header( "Location:index.php?error=stopBillet");
         echo '<div class="alert alert-warning" role="alert">
-            Vous avez supprimer tous les vols <a href="index.php" class="alert-link">Revenir à l\'index</a>
+            Vous avez supprimé tous les vols <a href="index.php" class="alert-link">Revenir à l\'index</a>
             </div>';
     }
 
@@ -362,12 +380,14 @@ function displayCommande(){
     echo '<p class="card-text">- ' . $_SESSION['nbBagage'] . ' x Bagage(s) &nbsp; : &nbsp; Gratuit';
     echo '</div>';
     echo '<div class="col">';
-    echo '<h5 class="card-text" style="padding-top: 17%; float: right">Prix total ' . getTotPrice() . '€</h5>';
+    echo '<form method="POST" action="controller.php?func=confirmUser">
+            <input type="checkbox" name="mailConfirm" style="padding-top: 17%;" value="1">&nbsp;Recevoir un mail de validation';
+    echo '<br><br><br><h5 class="card-text" style="float: right;">Prix total ' . getTotPrice() . '€</h5>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
     echo '</div><br>';
-    echo '<form method="POST" action="controller.php?func=confirmUser"><button style="width: 100%" type="submit" class="btn btn-white">Valider la commande</button></form><br>';
+    echo '<button style="width: 100%" type="submit" class="btn btn-white">Valider la commande</button></form><br><br>';
     echo '<form method="POST" action="controller.php?func=deleteReservation"><button style="width: 100%" type="submit" class="btn btn-white">Annuler la commande</button></form>';
 }
 
@@ -396,6 +416,7 @@ function displayFlight(){
     echo '</div>';
     echo '</div>';
     echo '</div><br>';
+
 }
 
 function redirectFlights($depart, $arrivee, $date, $nbrAdults, $nbrEnfants, $volDirect){
@@ -467,7 +488,7 @@ function CreateFormAdult($id){
                 </div>
                 <div class="form-row">
                     <div class = "form-group col-md-6">
-                        Nombre de bagage en soute : 
+                        Nombre de bagage(s) en soute : 
                         <input type="number" placeholder="Bagage(s)" class="form-control" name="bagage'.$id.'" min="0" max="5" required>
                       
                     </div>
@@ -508,7 +529,7 @@ function CreateFormEnfant($id){
                       <input type="date" class="form-control" min="'.$date.'" max="'.$actualDate.'" name="birthEnfant'.$id.'" required>
                      </div>
                       <div class = "form-group col-md-6">
-                        Nombre de bagage en soute : 
+                        Nombre de bagage(s) en soute : 
                         <input type="number" placeholder="bagage" class="form-control" name="bagageEnfant'.$id.'" min="0" max="30" required>
                     </div>    
                     </div>
@@ -584,8 +605,6 @@ function displayCardByAdult(){
     $result = $sth->fetchAll();
     $nAdultes=0;
 
-
-
     for ($k = 0; $k < $_SESSION['nbrAdultes']; $k++) {
         $nAdultes = $nAdultes +1;
         $unixTimestamp = strtotime($result[$k]['birth']);
@@ -625,6 +644,8 @@ function displayCardByAdult(){
     </div>
  </div>
  <br>';
+        $_SESSION["mailSend"]=$result[0]['mail'];
+
     }
 }
 function displayCardByChildren(){
@@ -686,9 +707,6 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     $sth1->execute();
     $result1=$sth1->fetchAll();
 
-    //print_r($result1[0][2]);
-    //echo $result1[1];
-
     $result1[0][2] = trim($result1[0][2]);
 
     $query2 = "SELECT fare FROM companyPrices WHERE route ='".$result1[0][2]."' AND ( weFlights = ".$weFlight." AND dateToDeparture = ".$dateToDeparture.")";
@@ -716,7 +734,6 @@ function getPrice($id, $weFlight, $dateToDeparture, $remplissage){
     $sth5 = $db->prepare($query5);
     $sth5->execute();
     $result5 = $sth5->fetch();
-    $lel = $priceFly + $result4[0] + $result5[0];
     return $priceFly + $result4[0] + $result5[0];
 }
 
@@ -765,7 +782,7 @@ function affichageAdmin(){
     $result = $sth->fetch();
 
     if($result[0] == 0){
-        echo '<div class="alert alert-warning" role="alert">Aucun vol n a été réservé !</div>';
+        echo '<div class="alert alert-warning" role="alert">Aucun vol n\'a été réservé !</div>';
     }
 
     for($i = 0; $i < $result[0] + 1; $i++){
@@ -819,7 +836,7 @@ function adminDisplayAdult($id){
                </div>
            </div>
            <div class="card-footer">
-           <h5>Prix total dépensé : '.$result[0][5].'€</h5>
+           <h5>Prix dépensé : '.$result[0][5].'€</h5>
             <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
            </div>
        </div>
@@ -859,7 +876,7 @@ function adminDisplayEnfant($id){
                       </div>
                   </div>
                   <div class="card-footer">
-                  <h5>Prix total dépensé : '.$result[0][4].'€</h5>
+                  <h5>Prix dépensé : '.$result[0][4].'€</h5>
                   <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
                   </div>
               </div>

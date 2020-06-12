@@ -34,7 +34,7 @@ echo '<!DOCTYPE html>
         &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
-            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+            <a class="navbar-brand" href="admin/affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
         </div>
     </nav>
 </header>
@@ -54,9 +54,9 @@ echo '<!DOCTYPE html>
         </div>
         <br>
          <ul class="pagination pagination-lg justify-content-center">
-            <li class="page-item"><button id="jourPre" class="page-link">Previous</button></li>
-            <li class="page-item"><button id="jourActu" class="page-link">020-20-20</button></li>
-            <li class="page-item"><button id="jourNext" class="page-link">Next</button></li>
+            <li class="page-item"><button id="jourPre" class="page-link">Précédent</button></li>
+            <li class="page-item"><button id="jourActu" class="page-link">---</button></li>
+            <li class="page-item"><button id="jourNext" class="page-link">Suivant</button></li>
           </ul>
 <div class="row">
     <div class="container col">
@@ -77,7 +77,7 @@ echo '<!DOCTYPE html>
                 <span class="text-muted"><small id="actualOrder">Actuel : Croissant</small></span>
                 <div class="row">
                     <div class="col-mx-auto"><button id="croissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Croissant</button></div>
-                    &nbsp;<div class="col-mx-auto"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Decroissant</button></div>
+                    &nbsp;<div class="col-mx-auto"><button id="decroissantButton"  style="margin-top: 4%; margin-bottom: -8%" type="button" class="btn btn-outline-white">Décroissant</button></div>
                     </div>
               </div>
               </div>
@@ -101,16 +101,16 @@ echo '<!DOCTYPE html>
                 <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
                 </div>
     </div>
-    <div class="container col-md-1">
+    <div class="container col-md-1" style="height: 500px;">
     </div>
      <br>
-      <br>
-       <br>
+     <br>
+     <br>
 </main>
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
-        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
+        <span class="text-muted">Développé par Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 <script src="JS/price.js"></script>

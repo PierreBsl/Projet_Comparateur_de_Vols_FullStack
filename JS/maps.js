@@ -22,8 +22,7 @@ function map(){
 
         let diffy=(latA+latD)/2;
         let diffx=(longA+longD)/2;
-        console.log(diffy);
-        console.log(diffx);
+
         var view = new MapView({
             container: "viewDiv",
             map: map,
@@ -92,26 +91,17 @@ function map(){
 
 
 function coco() {
-    console.log("Coco");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log("test1");
             let tab=this.responseText;
-            console.log(tab);
-
-            console.log("test2");
             tab=JSON.parse(tab);
-            console.log(tab);
 
             latDepart = tab[0]['lat'];
             longDepart = tab[0]['long'];
 
             latArrive = tab[1]['lat'];
             longArrive =tab[1]['long'];
-            console.log(latArrive);
-            console.log(longArrive);
-
 
         }
     };
@@ -120,9 +110,7 @@ function coco() {
 }
 
 window.onload = function() {
-    console.log("Debut SQL");
     coco();
-
     map();
 };
 

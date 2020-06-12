@@ -29,7 +29,7 @@ echo '<!doctype html>
         &nbsp;Air ISEN Search</a>        
         <div style="float: right">
             <a class="navbar-brand" href="connexion.php"><button type="button" class="btn btn-outline-white ">Connexion</button></a>
-            <a class="navbar-brand" href="affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
+            <a class="navbar-brand" href="admin/affichageAdmin.php"><button type="button" class="btn btn-outline-white">Admin</button></a>
         </div>
     </nav>
 </header>
@@ -47,7 +47,7 @@ echo '
 </body>
 <footer class="footer mt-auto py-3 bg-white border-top shadow-sm">
     <div class="container">
-        <span class="text-muted">Developped by Pierre, Hugo, Tristan, Eloi @ 2020</span>
+        <span class="text-muted">Développé par Pierre, Hugo, Tristan, Eloi @ 2020</span>
     </div>
 </footer>
 </html>';

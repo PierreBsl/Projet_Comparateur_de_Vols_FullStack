@@ -1,14 +1,12 @@
 
 function showHint() {
-    console.log("Key up");
+
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            //document.getElementById("txtHint").innerHTML = this.responseText;
+
             let tab=this.responseText.split(',');
-            console.log(tab);
             tab=JSON.parse(tab);
-            console.log(tab["ville"].length);
             document.getElementById("ville2").innerHTML = "";
             document.getElementById("ville3").innerHTML = "";
             for(let i=0; i<tab["ville"].length; i++){
@@ -25,14 +23,6 @@ function showHint() {
 }
 
 window.onload = function() {
-    /*document.getElementById("loading").innerHTML = "<div id='myNav' class='overlay' style='width: 100%'>" +
-        "<div class='overlay-content'>" +
-        "<div class='d-flex justify-content-center' style='color: orangered'>" +
-        "<div class='spinner-border' role='status' style='width: 4rem; height: 4rem;'></div>" +
-        "</div>" +
-        "</div>" +
-        "</div>";*/
-    console.log("Debut SQL");
     showHint();
 
 
@@ -40,7 +30,6 @@ window.onload = function() {
 
 
 function main() {
-    console.log("Start");
 
 }
 main();
