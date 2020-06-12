@@ -1,0 +1,5 @@
+AuthType Digest
+AuthName "RestrictedZone1"
+AuthDigestProvider file
+AuthUserFile "/etc/httpd/passdir/access.digest"
+Require valid-user

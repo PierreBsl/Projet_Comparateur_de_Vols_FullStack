@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="35.174.211.22" id="2673109b-7b1e-45d0-b66f-4110c6bd23f7" keyPath="C:\Users\Anselmet\Desktop\ISEN-Project-CIR2-Group10.asc" port="22" customName="eloi" nameFormat="CUSTOM" username="ec2-user" />
+      <sshConfig host="35.174.211.22" id="1680559d-ba1d-4a6e-b31a-9980f8e682fe" port="22" customName="ec2-user" nameFormat="CUSTOM" />
+    </configs>
+  </component>
+</project>

@@ -842,7 +842,7 @@ function adminDisplayAdult($id){
            </div>
            <div class="card-footer">
            <h5>Prix dépensé : '.$result[0][5].'€</h5>
-            <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
+            <form method="POST" action="/controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
            </div>
        </div>
    </div>
@@ -882,10 +882,10 @@ function adminDisplayEnfant($id){
                   </div>
                   <div class="card-footer">
                   <h5>Prix dépensé : '.$result[0][4].'€</h5>
-                  <form method="POST" action="controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
+                  <form method="POST" action="/controller.php?func=deletePeople&id='.$id.'"><button style="float: right; width: 30%" type="submit" class="btn btn-outline-white">Supprimer</button></form>
                   </div>
               </div>
-          </div>
+          </div>s
        </div>
        <br>';
 }
