@@ -153,19 +153,6 @@ echo '<input type="date" class="form-control" min="'.$today.'" name="departDate"
             </div>
         </div>
      <br>
-</form>
-                    </div>
-                </div>
-            </div>
-            <div style="border-left:1px solid darkgrey;height:352px"></div>
-            <div class="col">
-                <div class="card" style="height: 353px">
-                <iframe src="https://fr.euronews.com/embed/timeline" scrolling="no" style="border:none; min-height:425px; width:100%; height:100%;"></iframe>
-                </div>
-            </div>
-        </div>
-     <br>
-</form>
     </div>
     <br>
     <br>
