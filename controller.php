@@ -543,10 +543,16 @@ function CreateFormEnfant($id){
 
 function dateDiff(){
     $today = getdate();
+    $todaymonth = $today['mon'];
+    $mois =  $_SESSION['departDate'][5].$_SESSION['departDate'][6];
+    $diffmois = $mois-$todaymonth;
+
     $today = $today['mday'];
-    $_SESSION['departDate'];
     $weekDay1 = $_SESSION['departDate'][8].$_SESSION['departDate'][9];
     $diff=$weekDay1-$today;
+    if ($diffmois >= 1){
+        $diff+=30*$diffmois;
+    }
     if($diff > 21){
         return 21;
     } if ($diff > 10){
@@ -557,7 +563,6 @@ function dateDiff(){
         return 0;
     }
 }
-
 function travelTime($id){
     global $db;
     $query = "SELECT departureTime, arrivalTime FROM flights WHERE id ='".$id."'";
