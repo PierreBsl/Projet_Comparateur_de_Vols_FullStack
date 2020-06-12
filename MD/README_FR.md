@@ -35,7 +35,8 @@ Membres du groupe : Eloi ANSELMET, Pierre BOISLEVE, Hugo MERLE, Tristan ROUX
     - Récapitulatif de la commande personne par personne
     - Prix total du billet et prix par enfant et adulte
     - Possibilité de valider ou d'annuler la commande avec 2 boutons
-    - Si la commande est validée, elle ira dans la base de donnée des vols et l'utilisateur sera renvoyé à l'index
+    - Si la commande est validée, elle ira dans la base de donnée des vols et l'utilisateur sera renvoyé à l'index avec un message de validation et il recevra un message sur sa boîte mail
+    - Si la commande est annulée, elle sera détruite dans la base de données et l'utilisateur sera renvoyé à l'index avec un message d'annulation de la commande
 - Menu utilisateur : 
     - L'utilisateur peut se connecter avec son adresse mail et sa date de naissance,
     - Il verra toutes les commandes qu'il a effectué 

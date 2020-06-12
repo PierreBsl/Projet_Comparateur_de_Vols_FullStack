@@ -36,7 +36,8 @@ Group members : Eloi ANSELMET, Pierre BOISLEVE, Hugo MERLE, Tristan ROUX.
     - Summary of the order person by person
     - Total ticket price and price for a child / adult
     - Possibility to confirm or cancel the order with 2 buttons
-    - If the order is validated, it will go to the flight database and the user will be returned to the index
+    - If the order is validated, it will go to the flight database and the user will be returned to the index with a validation message and he will receive a message in his mailbox
+    - If the order is canceled, it will be destroyed in the database and the user will be returned to the index with a message canceling the order
 - User menu:
     - The user can connect with his email address and his date of birth,
     - He will see all the orders he has made
