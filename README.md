@@ -45,4 +45,4 @@ Membres du groupe : Eloi ANSELMET, Pierre BOISLEVE, Hugo MERLE, Tristan ROUX
     - L'administrateur peut voir la liste de tout les vols ayant été réservé sur le site, voir les mails et les dates de naissances des utilisateurs
     - L'administrateur peut annuler n'importe quel billet
     
-![Optional Text](../master/IMG/capture.png)
+![Optional Text](../master/IMG/Capture.PNG)
